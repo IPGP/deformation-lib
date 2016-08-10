@@ -21,4 +21,4 @@ Rectangular dislocation in elastic half-space (gravity and elevation change at s
 **François Beauducel**, [IPGP](www.ipgp.fr), [beaudu](https://github.com/beaudu), beauducel@ipgp.fr 
 
 ## Documentation
-All functions contain in-line help.
+All functions contain in-line help for syntax and examples.
