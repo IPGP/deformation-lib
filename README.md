@@ -1,4 +1,6 @@
-# Deformation analytical models summary
+# Deformation analytical models
+
+## Summary
 
 Some basic analytical models to compute surface deformations in elastic half-space. All codes are pure Matlab/Octave vectorized language.
 
@@ -13,3 +15,10 @@ Rectangular dislocation in elastic half-space (displacements, tilt and strain at
 
 ### Okubo [1992]
 Rectangular dislocation in elastic half-space (gravity and elevation change at surface).
+
+
+## Author
+**François Beauducel**, [IPGP](www.ipgp.fr), [beaudu](https://github.com/beaudu), beauducel@ipgp.fr 
+
+## Documentation
+All functions contain in-line help.
