@@ -4,17 +4,20 @@
 
 Some basic analytical models to compute surface deformations in elastic half-space. All codes are pure Matlab/Octave vectorized language.
 
-### Mogi [1958]
-Point source in elastic half-space, approximation for sphere of radius a &lt;&lt; f (displacements, tilt and strain at surface).
+### [Mogi](mogi)
+Point source in elastic half-space, approximation for sphere of radius a &lt;&lt; f to compute displacements, tilt and strain at surface [_Mogi_, 1958].
 
-### Sun [1969]
-Penny-shaped crack in elastic half-space, approximation for h/a >> 1 (displacements at surface).
+### [Sun](sun)
+Penny-shaped crack in elastic half-space, approximation for h/a >> 1 to compute displacements at surface [_Sun_, 1969].
 
-### Okada [1985]
-Rectangular dislocation in elastic half-space (displacements, tilt and strain at surface).
+### [Okada](okada)
+Rectangular dislocation in elastic half-space to compute displacements, tilt and strain at surface [_Okada_, 1985].
 
-### Okubo [1992]
-Rectangular dislocation in elastic half-space (gravity and elevation change at surface).
+### [Okubo](okubo)
+Rectangular dislocation in elastic half-space to compute gravity and elevation change at surface [_Okubo_, 1992]
+
+### [Doodson](doodson)
+Compute Doodson tidal wave components.
 
 
 ## Author
