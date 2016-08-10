@@ -14,6 +14,10 @@ X=doodson('M2')
     doodson: [2 0 0 0 0 0]
      period: 0.5175
 ```
+Type doodson without argument to see the list of available waves.
+
+## Author
+**François Beauducel**, [IPGP](www.ipgp.fr), [beaudu](https://github.com/beaudu), beauducel@ipgp.fr 
 
 ## Documentation
-Type doodson without argument to see the list of available waves.
+Type 'doc doodson' for syntax and examples.
