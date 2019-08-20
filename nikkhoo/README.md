@@ -35,12 +35,12 @@ Type "doc pcdmdesc" for help, syntax and examples.
 ## plotpcdm.m
 A first tentative script to represent a pCDM source on a graph, in 3-D or 2-D projections.
 
-##pcdmv.c
+## pcdmv.c
 This is a transcription of `pcdm.m` in C language that includes complementary subfunction `mexFunction()` to be compiled as a MEX file (Matlab/Octave executable). To make the binary for your computer architecture, you must install a compiler first then type at the Matlab/Octave command line:
 
 	>> mex pcdmv.c
 
-## Note on vectorization
+## Notes on vectorization
 The three codes have almost the same input parameters but different behaviors with input vectors and matrix:
 
 ### original pCDM.m by Nikkhoo (2016)
