@@ -16,6 +16,10 @@ Rectangular dislocation in elastic half-space to compute displacements, tilt and
 ### [Okubo](okubo)
 Rectangular dislocation in elastic half-space to compute gravity and elevation change at surface [_Okubo_, 1992]
 
+
+### [Nikkhoo](nikkhoo)
+Three mutually orthogonal point tensile dislocations in elastic half-space, approximation for inflated/deflated sill, dyke, pipe or any ellipsoid in the far-field [_Nikkhoo et al._, 2017]
+
 ### [Doodson](doodson)
 Compute Doodson tidal wave components.
 
