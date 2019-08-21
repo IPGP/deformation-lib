@@ -56,13 +56,13 @@ The three codes have almost the same input parameters but different behaviors wi
 It accepts vectors or matrix only for X and Y observation points coordinates. Other input parameters X0, Y0, DEPTH, OMEGAX, OMEGAY, OMEGAZ, DVX, DVY, DVZ, and NU must be scalars.
 
 ### pcdmv.m
-Accepts vectors or matrix for input parameters X, Y, DEPTH, OMEGAX, OMEGAY, OMEGAZ, DV, A, and B and any of them can be also a scalar. Optional NU input parameter must be a scalar. Since output arguments will be set to the same size as input X, if X is a scalar and other input arguments are vectors or matrix, use `repmat(X,...)` to make X also a vector or matrix. For other input arguments, any mixing between matrix and scalars are acceptable (if all matrix have the same size, of course).
+Accepts scalar, vector or matrix of the same size for all input parameters X, Y, DEPTH, OMEGAX, OMEGAY, OMEGAZ, DV, A, B, and optional NU, and any of them can be also a scalar, excepted for X: since output arguments will be set to the same size as X, if X is a scalar and other input arguments are vectors or matrix, you must use `repmat(X,...)` to make X also a vector or matrix. For other input arguments, any mixing between matrix and scalars are acceptable (if all matrix have the same size, of course).
 
 ### pcdmv.c
-Accepts all input arguments as scalar, vector or matrix but all of the same number of arguments or size. Mixing with scalar is prohibited. Output arguments will be set to the size of input arguments.
+Accepts all input arguments X, Y, DEPTH, OMEGAX, OMEGAY, OMEGAZ, DV, A, and B   as scalar, vector or matrix but all of the same number of elements or size. Mixing with scalar is prohibited. Last input argument NU is mandatory and must be a scalar. Output arguments will be set to the size of input arguments.
 
 ### performance
-This a basic comparison of computational time for one million different random models using a 2.7GHz Intel Core i7 computer.
+This a basic comparison of computational time for one million different random models with constant NU = 0.25, using a 2.7GHz Intel Core i7 computer.
 
 |code|time|
 |:----|--------|
