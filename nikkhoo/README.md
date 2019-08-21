@@ -69,3 +69,11 @@ This a basic comparison of computational time for one million different random m
 |pCDM.m (original)|4.0 s|
 |pcdmv.m|1.0 s|
 |pcdmv.c (compiled)|0.4 s|
+
+## Rerefences
+
+Nikkhoo, M., Walter, T. R., Lundgren, P. R., Prats-Iraola, P. (2017). Compound dislocation models (CDMs) for volcano deformation analyses.  *Geophys. J. Int.*, 208(2): 877-894, doi:10.1093/gji/ggw427
+
+[www.volcanodeformation.com](http://www.volcanodeformation.com)
+
+See source codes for copyright and full license information.
