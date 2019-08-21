@@ -180,7 +180,7 @@ if exist('makeplot','var')
 	end
 end
 
-if plotflag & any([numel(depth),numel(strike),numel(L),numel(W),numel(rake),numel(slip),numel(U3)]>1)
+if plotflag && any([numel(depth),numel(strike),numel(L),numel(W),numel(rake),numel(slip),numel(U3)]>1)
 	warning('Cannot make plot with fault geometry parameters other than scalars.')
 	plotflag = 0;
 end
