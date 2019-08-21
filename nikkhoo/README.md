@@ -6,6 +6,7 @@ Nikkhoo et al. [2017] model calculates analytical solution for surface displacem
 This model can be used to simulate inflation or deflation of a volumetric source observed in the far field, like magmatic instrusion under a volcano and GPS surface stations measurements. The model is able to approximate any shape: isotropic, sill, dyke, pipe, or any ellipsoid in any orientations in space.
 
 ![](pcdm_ab.png)
+*Figure 1. Example of source shapes that can be simulated by pCDM. On this figure surface of each point dislocation is enlarged to be proportional to its associated volume variation.*
 
 ## pcdmv.m
 The proposed Matlab script is a literal transcription of the Nikkhoo's equations from original script pCDM.m (see [www.volcanodeformation.com](http://www.volcanodeformation.com)), except for:
@@ -58,5 +59,5 @@ This a basic comparison of computational time for one million different random m
 |code|time|
 |:----|--------|
 |pCDM.m (original)|4.0 s|
-|pcdm.m|1.0 s|
+|pcdmv.m|1.0 s|
 |pcdmv.c (compiled)|0.4 s|
