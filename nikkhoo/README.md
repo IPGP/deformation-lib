@@ -3,6 +3,16 @@
 
 Nikkhoo et al. [2017] model calculates analytical solution for surface displacements due to a combination of 3 mutually orthogonal tensile displocations (one horizontal and two vertical) freely oriented in space (3 angles of rotation) in an elastic half-space.
 
+|Input arguments|Description|
+|-------------:|:----------|
+|X and Y| Horizontal coordinates (East, North) of calculation points relative to source located at (0,0).|
+|DEPTH  | Depth of the source from calculation points, same unit as X and Y. Note that you might add source depth to elevation at each calculation points to approximate the topographic effects.|
+|OMEGAX OMEGAY OMEGAZ| Clockwise rotation angles around X, Y and Z axes, respectively, that specify the orientation of the pCDM in space, in degrees.|
+|DV| Total potency DV = dVX+dVY+dVZ of the point tensile dislocations that before applying the rotations are normal to the X, Y and Z axes, respectively. The potency has the unit of volume (the unit of displacements and semi-axes to the power of 3).|
+|A | Horizontal over total volume variation ratio A = dVZ/DV.|
+|B | Vertical volume variation ratio B = dVY/(dVX+dVY).|
+|NU | Poisson's ratio, optional and dimensionless (default is 0.25 for an isotropic medium).|
+
 This model can be used to simulate inflation or deflation of a volumetric source observed in the far field, like magmatic instrusion under a volcano and GPS surface stations measurements. The model is able to approximate any shape: isotropic, sill, dyke, pipe, or any ellipsoid in any orientations in space.
 
 ![](pcdm_ab.png)
@@ -12,9 +22,7 @@ This model can be used to simulate inflation or deflation of a volumetric source
 The proposed Matlab script is a literal transcription of the Nikkhoo's equations from original script pCDM.m (see [www.volcanodeformation.com](http://www.volcanodeformation.com)), except for:
 
 - the source coordinates is set to (0,0) so observation points (x,y) are relative to it;
-- the volume potencies have been redefined as a total volume variation *dVtot* and two dimensionless shape parameters *A* and *B*, between 0 and 1, defined as follows (see `pcdmdesc.m` below for examples):
-	- *A = dVz / dVtot* is horizontal over total volume variation ratio,
-	- *B = dVy / (dVx + dVy)* is vertical volume variation ratio;
+- the volume potencies have been redefined as a total volume variation *dVtot* and two dimensionless shape parameters *A* and *B*, between 0 and 1, defined as in the upper table (see Figure 1 for examples);
 - the equations have been vectorized for all input parameters excepted Poisson's ratio *nu* which must be a scalar. So massive computation can be achieved on large vectors, matrix or even N-D matrix of inputs.
 
 Type "doc pcdm" for help, syntax and example, and see script comments for details.

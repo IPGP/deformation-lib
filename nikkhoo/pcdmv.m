@@ -19,12 +19,12 @@ function varargout=pcdmv(varargin)
 %
 %	X and Y:
 %	   Horizontal coordinates (East, North) of calculation points relative
-%	   to source located at (0,0). X and Y must have the same size.
+%	   to source located at (0,0).
 %
 %	DEPTH:
-%	   Depth of the source from calculation points, scalar of same size and
-%	   same unit as X and Y. Note that you might add source depth to elevation
-%	   at each calculation points to approximate the topographic effects.
+%	   Depth of the source from calculation points, same unit as X and Y.
+%	   Note that you might add source depth to elevation at each 
+%	   calculation points to approximate the topographic effects.
 %
 %	OMEGAX, OMEGAY and OMEGAZ:
 %	   Clockwise rotation angles about X, Y and Z axes, respectively, that 
@@ -80,7 +80,7 @@ function varargout=pcdmv(varargin)
 %	Authors: François Beauducel, Antoine Villié, and Mehdi Nikkhoo
 %	Created: 2015-05-22 in GFZ Potsdam (Germany) by Mehdi Nikkhoo
 %	Modified: 2018-07-18 in UGM Yogyakarta (Indonesia) by Antoine Villié
-%	Updated: 2019-08-19
+%	Updated: 2019-08-21
 
 %	Copyright (c) 2016 Mehdi Nikkhoo
 %	Copyright (c) 2018 Antoine Villié
