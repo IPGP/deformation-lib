@@ -9,10 +9,9 @@ Nikkhoo has proposed two versions of analytical solutions (see [www.volcanodefor
 * the **CDM** is composed of 3 finite rectangular dislocations of different semi-axe lengths, all with the same amount of opening. The source is fully described by a total of 10 parameters;
 * the **pCDM** is composed of 3 point tensile dislocations of different potencies (volume variations). The equations are simplier and much faster. Source is fully described by only 9 parameters. This is a good model for far-field observations.
 
-<figure style="text-align: center; margin: 3em">
-  <img src="Nikkhoo2017_CDM_fig3d.png" alt="CDM"/>
-  <figcaption><em>Figure 1. The three rectangular discontinuities composing the CDM and rotation angle definition (from Nikkhoo et al., 2017).</em></figcaption>
-</figure>
+![](Nikkhoo2017_CDM_fig3d.png)
+
+*Figure 1. The three rectangular discontinuities composing the CDM and rotation angle definition (from Nikkhoo et al., 2017).*
 
 
 The proposed scripts are literal transcriptions of the Nikkhoo's equations from original script `CDM.m` and `pCDM.m`, except for:
@@ -41,10 +40,10 @@ Pure Matlab/GNU Octave code fully vectorized (no loop, no if condition). Type "d
 
 For this code we introduced a difference from original function to have the total potency as one of the input parameter: the 3 volume potencies have been redefined as a total volume variation *dVtot* and two dimensionless shape parameters *A* and *B*, between 0 and 1, defined as in the upper table (see Figure 2 for examples).
 
-<figure style="text-align: center; margin: 3em">
-  <img src="pcdm_ab.png" alt="pCDM"/>
-  <figcaption><em>Figure 2. Example of source shapes that can be simulated by pCDM. On this figure surface of each point dislocation is enlarged to be proportional to its associated volume variation.</em></figcaption>
-</figure>
+![](pcdm_ab.png)
+
+*Figure 2. Example of source shapes that can be simulated by pCDM. On this figure surface of each point dislocation is enlarged to be proportional to its associated volume variation.*
+
 
 |Input arguments|Description|
 |-------------:|:----------|
