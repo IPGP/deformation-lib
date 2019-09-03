@@ -19,7 +19,7 @@
  * Author: François Beauducel, IPGP/IRD
  * Reference: cdmv.m by F. Beauducel and A. Villié, after Nikkhoo et al. (2017)
  * Created: 2019-08-31
- * Updated: 2019-09-02
+ * Updated: 2019-09-03
  */
 
 /*
@@ -27,7 +27,7 @@
  * dislocation in a half-space.
  */
 void AngDisDispSurf(double y1, double y2, double beta, double b1, double b2, double b3,
-		double nu, double a, double* v1, double* v2, double* v3) {
+		double nu2, double a, double* v1, double* v2, double* v3) {
 
 	double sinB, cosB, cotB, z1, z3, r, Fi,
 		v1b1, v2b1, v3b1,
@@ -41,31 +41,31 @@ void AngDisDispSurf(double y1, double y2, double beta, double b1, double b2, dou
 	z3 = y1*sinB - a*cosB;
 	r = sqrt(pow(y1,2) + pow(y2,2) + pow(a,2));
 
-	Fi = 2.*atan2(y2,(r + a)*cos(beta/2)/sin(beta/2) - y1); /* The Burgers function */
+	Fi = 2*atan2(y2,(r + a)*cos(beta/2)/sin(beta/2) - y1); /* The Burgers function */
 
-	v1b1 = b1/2./PI*((1. - (1.-2.*nu)*pow(cotB,2))*Fi 
-			+ y2/(r + a)*((1.-2.*nu)*(cotB + y1/2./(r + a)) - y1/r)
+	v1b1 = b1*((1 - nu2*pow(cotB,2))*Fi 
+			+ y2/(r + a)*(nu2*(cotB + y1/2/(r + a)) - y1/r)
 			- y2*(r*sinB - y1)*cosB/r/(r - z3));
-	v2b1 = b1/2./PI*((1.-2*nu)*((0.5 + pow(cotB,2))*log(r+a) - cotB/sinB*log(r - z3))
-			- 1./(r + a)*((1.-2.*nu)*(y1*cotB - a/2 - pow(y2,2)/2./(r + a)) + pow(y2,2)/r)
+	v2b1 = b1*(nu2*((.5 + pow(cotB,2))*log(r+a) - cotB/sinB*log(r - z3))
+			- 1/(r + a)*(nu2*(y1*cotB - a/2 - pow(y2,2)/2/(r + a)) + pow(y2,2)/r)
 			+ pow(y2,2)*cosB/r/(r - z3));
-	v3b1 = b1/2./PI*((1.-2.*nu)*Fi*cotB + y2/(r + a)*(2.*nu + a/r) - y2*cosB/(r - z3)*(cosB + a/r));
+	v3b1 = b1*(nu2*Fi*cotB + y2/(r + a)*(1 - nu2 + a/r) - y2*cosB/(r - z3)*(cosB + a/r));
 
-	v1b2 = b2/2./PI*(-(1.-2.*nu)*((0.5-pow(cotB,2))*log(r + a) + pow(cotB,2)*cosB*log(r - z3)) 
-			- 1./(r + a)*((1.-2.*nu)*(y1*cotB + a/2. + pow(y1,2)/2./(r + a)) - pow(y1,2)/r)
+	v1b2 = b2*(-nu2*((.5-pow(cotB,2))*log(r + a) + pow(cotB,2)*cosB*log(r - z3)) 
+			- 1/(r + a)*(nu2*(y1*cotB + a/2 + pow(y1,2)/2/(r + a)) - pow(y1,2)/r)
 			+ z1*(r*sinB - y1)/r/(r - z3));
-	v2b2 = b2/2./PI*((1. + (1.-2.*nu)*pow(cotB,2))*Fi - y2/(r + a)*((1.-2.*nu)*(cotB + y1/2./(r + a)) - y1/r)
+	v2b2 = b2*((1 + nu2*pow(cotB,2))*Fi - y2/(r + a)*(nu2*(cotB + y1/2/(r + a)) - y1/r)
 			- y2*z1/r/(r - z3));
-	v3b2 = b2/2./PI*(-(1.-2.*nu)*cotB*(log(r + a) - cosB*log(r - z3)) 
-			- y1/(r + a)*(2.*nu + a/r) + z1/(r - z3)*(cosB + a/r));
+	v3b2 = b2*(-nu2*cotB*(log(r + a) - cosB*log(r - z3)) 
+			- y1/(r + a)*(1 - nu2 + a/r) + z1/(r - z3)*(cosB + a/r));
 
-	v1b3 = b3/2./PI*(y2*(r*sinB - y1)*sinB/r/(r - z3));
-	v2b3 = b3/2./PI*(-pow(y2,2)*sinB/r/(r - z3));
-	v3b3 = b3/2./PI*(Fi + y2*(r*cosB + a)*sinB/r/(r - z3));
+	v1b3 = b3*(y2*(r*sinB - y1)*sinB/r/(r - z3));
+	v2b3 = b3*(-pow(y2,2)*sinB/r/(r - z3));
+	v3b3 = b3*(Fi + y2*(r*cosB + a)*sinB/r/(r - z3));
 
-	*v1 = v1b1 + v1b2 + v1b3;
-	*v2 = v2b1 + v2b2 + v2b3;
-	*v3 = v3b1 + v3b2 + v3b3;
+	*v1 = (v1b1 + v1b2 + v1b3)/2/PI;
+	*v2 = (v2b1 + v2b2 + v2b3)/2/PI;
+	*v3 = (v3b1 + v3b2 + v3b3)/2/PI;
 
 }
 
@@ -90,7 +90,7 @@ void CoordTrans(double x1, double x2, double x3, double A[3][3],
  */
 
 void AngSetupFSC(double x, double y, double bX, double bY, double bZ, 
-		double* PA, double* PB, double nu, double* ue, double* un, double* uv) {
+		double* PA, double* PB, double nu2, double* ue, double* un, double* uv) {
 	
 	double A[3][3], norm, beta, null,
 		y1A, y2A, y1B,
@@ -132,11 +132,11 @@ void AngSetupFSC(double x, double y, double bX, double bY, double bZ,
 
 		/* artefact-free for the calculation points near the free surface */
 		if (beta*y1A >= 0) {
-			AngDisDispSurf(y1A, y2A, beta-PI, b1, b2, b3, nu, -PA[2], &v1A, &v2A, &v3A);
-			AngDisDispSurf(y1B, y2B, beta-PI, b1, b2, b3, nu, -PB[2], &v1B, &v2B, &v3B);
+			AngDisDispSurf(y1A, y2A, beta-PI, b1, b2, b3, nu2, -PA[2], &v1A, &v2A, &v3A);
+			AngDisDispSurf(y1B, y2B, beta-PI, b1, b2, b3, nu2, -PB[2], &v1B, &v2B, &v3B);
 		} else {
-			AngDisDispSurf(y1A, y2A, beta, b1, b2, b3, nu, -PA[2], &v1A, &v2A, &v3A);
-			AngDisDispSurf(y1B, y2B, beta, b1, b2, b3, nu, -PB[2], &v1B, &v2B, &v3B);
+			AngDisDispSurf(y1A, y2A, beta, b1, b2, b3, nu2, -PA[2], &v1A, &v2A, &v3A);
+			AngDisDispSurf(y1B, y2B, beta, b1, b2, b3, nu2, -PB[2], &v1B, &v2B, &v3B);
 		}
 
 		/* Calculate total displacements in ADCS */
@@ -158,7 +158,7 @@ void AngSetupFSC(double x, double y, double bX, double bY, double bZ,
  */
 
 void RDdispSurf(double x, double y, double P1[3], double P2[3], double P3[3], double P4[3], 
-		double op, double nu, double* ue, double* un, double* uv) {
+		double op, double nu2, double* ue, double* un, double* uv) {
 	
 	double norm,
 	       bX, bY, bZ,
@@ -175,10 +175,10 @@ void RDdispSurf(double x, double y, double P1[3], double P2[3], double P3[3], do
 	bY *= op/norm;
 	bZ *= op/norm;
 
-	AngSetupFSC(x, y, bX, bY, bZ, P1, P2, nu, &u1, &v1, &w1); /* Side P1P2 */
-	AngSetupFSC(x, y, bX, bY, bZ, P2, P3, nu, &u2, &v2, &w2); /* Side P2P3 */
-	AngSetupFSC(x, y, bX, bY, bZ, P3, P4, nu, &u3, &v3, &w3); /* Side P3P4 */
-	AngSetupFSC(x, y, bX, bY, bZ, P4, P1, nu, &u4, &v4, &w4); /* Side P4P1 */
+	AngSetupFSC(x, y, bX, bY, bZ, P1, P2, nu2, &u1, &v1, &w1); /* Side P1P2 */
+	AngSetupFSC(x, y, bX, bY, bZ, P2, P3, nu2, &u2, &v2, &w2); /* Side P2P3 */
+	AngSetupFSC(x, y, bX, bY, bZ, P3, P4, nu2, &u3, &v3, &w3); /* Side P3P4 */
+	AngSetupFSC(x, y, bX, bY, bZ, P4, P1, nu2, &u4, &v4, &w4); /* Side P4P1 */
 
 	*ue = u1 + u2 + u3 + u4;
 	*un = v1 + v2 + v3 + v4;
@@ -209,14 +209,17 @@ void cdm(double* x, double* y, double* d, double* ox, double* oy, double* oz,
 	for (i = 0; i < numel; i++) {
 
 		/* converts angles in radian */
-		oxd = *(ox + i) * PI / 180.;
-		oyd = *(oy + i) * PI / 180.;
-		ozd = *(oz + i) * PI / 180.;
+		oxd = *(ox + i) * PI / 180;
+		oyd = *(oy + i) * PI / 180;
+		ozd = *(oz + i) * PI / 180;
 
 		/* semi-axes to full axes */
-		ax = *(ax2 + i)*2.;
-		ay = *(ay2 + i)*2.;
-		az = *(az2 + i)*2.;
+		ax = *(ax2 + i)*2;
+		ay = *(ay2 + i)*2;
+		az = *(az2 + i)*2;
+
+		/* converts nu to 1-2*nu */
+		nu = 1 - 2*nu;
 		
 		/* 3-D matrix of rotation */
 		R11 =  cos(oyd) * cos(ozd);
@@ -230,9 +233,9 @@ void cdm(double* x, double* y, double* d, double* ox, double* oy, double* oz,
 		R33 =  cos(oxd) * cos(oyd);
 
 		/* coordinates for each RD summits */
-		P1[0] = ay*R21/2. + az*R31/2.;
-		P1[1] = ay*R22/2. + az*R32/2.;
-		P1[2] = ay*R23/2. + az*R33/2. - *(d + i);
+		P1[0] = ay*R21/2 + az*R31/2;
+		P1[1] = ay*R22/2 + az*R32/2;
+		P1[2] = ay*R23/2 + az*R33/2 - *(d + i);
 		P2[0] = P1[0] - ay*R21;
 		P2[1] = P1[1] - ay*R22;
 		P2[2] = P1[2] - ay*R23;
@@ -243,9 +246,9 @@ void cdm(double* x, double* y, double* d, double* ox, double* oy, double* oz,
 		P4[1] = P1[1] - az*R32;
 		P4[2] = P1[2] - az*R33;
 
-		Q1[0] = -ax*R11/2. + az*R31/2.;
-		Q1[1] = -ax*R12/2. + az*R32/2.;
-		Q1[2] = -ax*R13/2. + az*R33/2. - *(d + i);
+		Q1[0] = -ax*R11/2 + az*R31/2;
+		Q1[1] = -ax*R12/2 + az*R32/2;
+		Q1[2] = -ax*R13/2 + az*R33/2 - *(d + i);
 		Q2[0] = Q1[0] + ax*R11;
 		Q2[1] = Q1[1] + ax*R12;
 		Q2[2] = Q1[2] + ax*R13;
@@ -256,9 +259,9 @@ void cdm(double* x, double* y, double* d, double* ox, double* oy, double* oz,
 		Q4[1] = Q1[1] - az*R32;
 		Q4[2] = Q1[2] - az*R33;
 
-		R1[0] = ax*R11/2. + ay*R21/2.;
-		R1[1] = ax*R12/2. + ay*R22/2.;
-		R1[2] = ax*R13/2. + ay*R23/2. - *(d + i);
+		R1[0] = ax*R11/2 + ay*R21/2;
+		R1[1] = ax*R12/2 + ay*R22/2;
+		R1[2] = ax*R13/2 + ay*R23/2 - *(d + i);
 		R2[0] = R1[0] - ax*R11;
 		R2[1] = R1[1] - ax*R12;
 		R2[2] = R1[2] - ax*R13;
@@ -329,7 +332,7 @@ void mexFunction(int nlhs, mxArray* plhs[], int nrhs, const mxArray* prhs[]) {
 			|| (n < 10 && (mxGetNumberOfElements(prhs[n]) != numel ))
 			|| (n == 10 && !mxIsScalar(prhs[n])))
 			mexErrMsgIdAndTxt("MATLAB:pcdmv:fieldNotRealMatrix",
-				"All input arguments must be real, double matrix with same size.");
+				"All input arguments must be real, double matrix with same size excepted NU that must be a scalar.");
 	}
 
 	/*  create pointers to each of the input matrices */

@@ -125,7 +125,7 @@ Since the original scripts where vectorized for observation points only, the gai
 |----:|--------:|-------:|
 |original .m|189 s|8.0 s|
 |vectorized .m|5.8 s|0.9 s|
-|compiled .c|2.6 s|0.4 s|
+|compiled .c|2.4 s|0.4 s|
 
 ## Rerefences
 
