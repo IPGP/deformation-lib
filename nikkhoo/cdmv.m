@@ -80,7 +80,7 @@ function varargout=cdmv(varargin)
 %
 %	Authors: François Beauducel, Antoine Villié, and Mehdi Nikkhoo
 %	Created: 2015-05-22 in GFZ Potsdam (Germany) by Mehdi Nikkhoo
-%	Updated: 2019-08-31
+%	Updated: 2019-09-02
 
 %	Copyright (c) 2016 Mehdi Nikkhoo
 %	Copyright (c) 2019 François Beauducel
@@ -254,7 +254,8 @@ beta = acos(-SideVec(:,3)./sqrt(sum(SideVec.^2,2)));
 ey1 = [SideVec(:,1:2),zeros(size(X))];
 ey1 = ey1./repmat(sqrt(sum(ey1.^2,2)),1,3);
 ey3 = repmat([0 0 -1],length(X),1);
-ey2 = cross(ey3,ey1,2);
+%ey2 = cross(ey3,ey1,2);
+ey2 = [ey1(:,2),-ey1(:,1),zeros(size(X))];
 
 % Transform coordinates from EFCS to the first ADCS
 [y1A,y2A,~] = CoordTrans(X-PA(:,1),Y-PA(:,2),-PA(:,3),ey1,ey2,ey3);
@@ -282,9 +283,9 @@ v2 = v2B - v2A;
 v3 = v3B - v3A;
 
 % Transform total displacements from ADCS to EFCS
-ue = ey1(:,1).*v1 + ey2(:,1).*v2 + ey3(:,1).*v3;
-un = ey1(:,2).*v1 + ey2(:,2).*v2 + ey3(:,2).*v3;
-uv = ey1(:,3).*v1 + ey2(:,3).*v2 + ey3(:,3).*v3;
+ue = ey1(:,1).*v1 + ey2(:,1).*v2;
+un = ey1(:,2).*v1 + ey2(:,2).*v2;
+uv = ey3(:,3).*v3;
 
 k = abs(beta)<eps | abs(pi-beta)<eps;
 ue(k) = 0;
