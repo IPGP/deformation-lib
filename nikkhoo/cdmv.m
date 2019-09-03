@@ -80,7 +80,7 @@ function varargout=cdmv(varargin)
 %
 %	Authors: François Beauducel, Antoine Villié, and Mehdi Nikkhoo
 %	Created: 2015-05-22 in GFZ Potsdam (Germany) by Mehdi Nikkhoo
-%	Updated: 2019-09-02
+%	Updated: 2019-09-03
 
 %	Copyright (c) 2016 Mehdi Nikkhoo
 %	Copyright (c) 2019 François Beauducel
@@ -117,14 +117,34 @@ D  = varargin{3}(:);
 OX = varargin{4}(:);
 OY = varargin{5}(:);
 OZ = varargin{6}(:);
-AX = 2*abs(varargin{7}(:));
-AY = 2*abs(varargin{8}(:));
-AZ = 2*abs(varargin{9}(:));
+AX = 2*varargin{7}(:);
+AY = 2*varargin{8}(:);
+AZ = 2*varargin{9}(:);
 OP = varargin{10}(:);
 if nargin < 11
 	NU = 0.25;
 else
 	NU = varargin{11}(:);
+end
+
+% normalization of sizes to allow any mixing of scalar/matrix
+if isscalar(OX)
+    OX = repmat(OX,size(X));
+end
+if isscalar(OY)
+    OY = repmat(OY,size(X));
+end
+if isscalar(OZ)
+    OZ = repmat(OZ,size(X));
+end
+if isscalar(AX)
+    AX = repmat(AX,size(X));
+end
+if isscalar(AY)
+    AY = repmat(AY,size(X));
+end
+if isscalar(AZ)
+    AZ = repmat(AZ,size(X));
 end
 
 % coefficients from the 3-D matrix of rotation

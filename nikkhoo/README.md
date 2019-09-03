@@ -102,26 +102,30 @@ The codes have almost the same input parameters but different behaviors with inp
 
 ### Originals by Nikkhoo (2016)
 
-**CDM.m** accepts vectors or matrix only for X and Y observation points coordinates. Other input parameters defining the source X0, Y0, DEPTH, OMEGAX, OMEGAY, OMEGAZ, AX, AY, AZ, OPENING and NU must be scalars.
+**CDM.m** accepts vectors or matrix only for X and Y observation points coordinates. Other input parameters defining the source X0, Y0, DEPTH, OMEGAX, OMEGAY, OMEGAZ, AX, AY, AZ, OPENING and NU must be scalars. If the CDM source is partly/totally above the surface, the code exists with an error.
 
 **pCDM.m** accepts vectors or matrix only for X and Y observation points coordinates. Other input parameters defining the source X0, Y0, DEPTH, OMEGAX, OMEGAY, OMEGAZ, DVX, DVY, DVZ, and NU must be scalars.
 
 ### Vectorized Matlab/GNU Octave
-**cdmv.m** accepts scalar, vector or matrix of the same size for all input parameters X, Y, DEPTH, OMEGAX, OMEGAY, OMEGAZ, AX, AY, AZ, OPENING, and optional NU, and any of them can be also a scalar, excepted for X: since output arguments will be set to the same size as X, if X is a scalar and other input arguments are vectors or matrix, you must use `repmat(X,...)` to make X also a vector or matrix. For other input arguments, any mixing between matrix and scalars are acceptable (if all matrix have the same size, of course).
+**cdmv.m** accepts scalar, vector or matrix of the same size for all input parameters X, Y, DEPTH, OMEGAX, OMEGAY, OMEGAZ, AX, AY, AZ, OPENING, and optional NU, and any of them can be also a scalar, excepted for X: since output arguments will be set to the same size as X, if X is a scalar and other input arguments are vectors or matrix, you must use `repmat(X,...)` to make X also a vector or matrix. For other input arguments, any mixing between matrix and scalars are acceptable (if all matrix have the same size, of course). If the CDM source is partly/totally above the surface, the code returns NaN values.
 
 **pcdmv.m** accepts scalar, vector or matrix of the same size for all input parameters X, Y, DEPTH, OMEGAX, OMEGAY, OMEGAZ, DV, A, B, and optional NU, and any of them can be also a scalar, excepted for X: since output arguments will be set to the same size as X, if X is a scalar and other input arguments are vectors or matrix, you must use `repmat(X,...)` to make X also a vector or matrix. For other input arguments, any mixing between matrix and scalars are acceptable (if all matrix have the same size, of course).
 
 ### Compiled C as MEX/OCT
-**pcdmv.c** accepts all input arguments X, Y, DEPTH, OMEGAX, OMEGAY, OMEGAZ, DV, A, and B   as scalar, vector or matrix but all must have the same number of elements or size. Mixing with scalar is prohibited so you may use `repmat()` to convert any scalar to a matrix if necessary. Last input argument NU is mandatory and must be a scalar. Output arguments will be set to the size of input arguments.
+**cdmv.c** accepts all input arguments X, Y, DEPTH, OMEGAX, OMEGAY, OMEGAZ, AX, AY, AZ, and OPENING as scalar, vector or matrix but all must have the same number of elements or size. Mixing with scalar is prohibited so you may use `repmat()` to convert any scalar to a matrix if necessary. Last input argument NU is mandatory and must be a scalar. Output arguments will be set to the size of input arguments.
+
+**pcdmv.c** accepts all input arguments X, Y, DEPTH, OMEGAX, OMEGAY, OMEGAZ, DV, A, and B as scalar, vector or matrix but all must have the same number of elements or size. Mixing with scalar is prohibited so you may use `repmat()` to convert any scalar to a matrix if necessary. Last input argument NU is mandatory and must be a scalar. Output arguments will be set to the size of input arguments.
 
 ### Performance
-This a basic comparison of computational times using a 2.7GHz Intel Core i7 computer for 100,000 different random models computed for 10 observation points. All with constant NU = 0.25. Since the original scripts where vectorized for observation points only, the gain is mostly on the source parameters.
+This a basic comparison of computational times using a 2.7GHz Intel Core i7 computer for 100,000 different random models computed for 10 observation points. All with constant NU = 0.25. Times are the minimum observed, generally the second or third run to avoid load/compilation delays.
+
+Since the original scripts where vectorized for observation points only, the gain is mostly on the source parameters.
 
 |code| CDM| pCDM|
 |----:|--------:|-------:|
 |original .m|189 s|8.0 s|
-|vectorized .m|6 s|0.9 s|
-|compiled .c|-|0.4 s|
+|vectorized .m|5.8 s|0.9 s|
+|compiled .c|2.6 s|0.4 s|
 
 ## Rerefences
 
