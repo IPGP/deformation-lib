@@ -2,12 +2,12 @@
 
 *Nikkhoo et al.* [2017] model calculates analytical solution for surface displacements due to a combination of three mutually orthogonal tensile displocations (one horizontal and two vertical) freely oriented in space (three angles of rotation) in an elastic half-space.
 
-This model can be used to simulate inflation or deflation of a volumetric source, like magmatic instrusion under a volcano and GPS stations measurements at surface. The model is able to approximate the most common shapes of source: isotropic, sill, dyke, pipe, or any ellipsoid in any orientations in space. In practice, this code is able to replace, especially in the far-field, former [Mogi](../mogi), [Sun](../sun), [Okada](../okada), Davis, Bonaccorso, and other analytic models of simple sources in elastic half-space that have been proposed in the last century.
+This model can be used to simulate inflation or deflation of a volumetric source, like magmatic instrusion under a volcano and GPS stations measurements at surface. The model is able to approximate the most common shapes of source: isotropic (sphere), sill, dyke, pipe, or any ellipsoid in any orientation in space. In practice, this code is able to replace, especially in the far-field, former [Mogi](../mogi), [Sun](../sun), [Okada](../okada), Davis, Bonaccorso, and other analytic models of simple sources in elastic half-space that have been proposed in the last century.
 
-Nikkhoo has proposed two versions of analytical solutions (see [www.volcanodeformation.com](http://www.volcanodeformation.com)):
+Nikkhoo has proposed two versions of analytical solutions for CDM (see [www.volcanodeformation.com](http://www.volcanodeformation.com)):
 
 * the **CDM** is composed of 3 finite rectangular dislocations of different semi-axe lengths, all with the same amount of opening. The source is fully described by a total of 10 parameters;
-* the **pCDM** is composed of 3 point tensile dislocations of different potencies (volume variations). The equations are simplier and much faster. Source is fully described by only 9 parameters. This is a good model for far-field observations.
+* the **pCDM** is composed of 3 point tensile dislocations of different potencies (volume variations). The equations are simplier and much faster than CDM. Source is fully described by only 9 parameters. This is the best choice for far-field observations.
 
 ![](Nikkhoo2017_CDM_fig3d.png)
 
@@ -17,18 +17,36 @@ Nikkhoo has proposed two versions of analytical solutions (see [www.volcanodefor
 The proposed scripts are literal transcriptions of the Nikkhoo's equations from original script `CDM.m` and `pCDM.m`, except for:
 
 - the source coordinates is set to (0,0) so observation points (x,y) are relative to it;
-- the equations have been vectorized for all input source parameters. So massive computation can be achieved on large vectors, matrix or even N-D matrix of inputs, which is useful for inversion.
+- the equations have been vectorized for all input source parameters. So massive computation can be achieved on large vectors, matrix or even N-D matrix of inputs, which is useful for inversion;
+- for pCDM we introduced a difference from original function to have the total potency as one of the input parameter: the 3 volume potencies have been redefined as a total volume variation *dVtot* and two dimensionless shape parameters *A* and *B*, between 0 and 1, defined as in the upper table (see Figure 2 for examples).
 
-## CDM code
+### Common input/output parameters ###
 
 |Input arguments|Description|
 |-------------:|:----------|
-|X and Y| Horizontal coordinates (East, North) of calculation points relative to source located at (0,0). For original code `CDM.m` it corresponds to X-X0 and Y-Y0, respectively.|
+|X and Y| Horizontal coordinates (East, North) of calculation points relative to source located at (0,0). For original codes `CDM.m` and `pCDM.m` it corresponds to X-X0 and Y-Y0, respectively.|
 |DEPTH  | Depth of the source from calculation points, same unit as X and Y. Note that you might add the elevation at each calculation points to approximate the topographic effects.|
 |OMEGAX OMEGAY OMEGAZ| Clockwise rotation angles around X, Y and Z axes, respectively, that specify the orientation of the CDM in space, in degrees.|
+|NU | Poisson's ratio, optional and dimensionless (default is 0.25 for an isotropic medium).|
+
+|Output arguments|Description|
+|-------------:|:----------|
+|uE uN uV| Calculated displacement vector components in EFCS. Will have the same unit as X, Y and DEPTH.|
+
+## CDM code
+
+```
+[uE,uN,uV,DV]=cdmv(X,Y,DEPTH,OMEGAX,OMEGAY,OMEGAZ,AX,AY,AZ,OPENING,NU);
+```
+
+|Input arguments|Description|
+|-------------:|:----------|
 |AX AY AZ| Semi-axes of the CDM along the X, Y and Z axes, respectively, before applying the rotations. AX, AY and AZ have the same unit as X and Y.|
 |OPENING | The opening (tensile component of the Burgers vector) of the rectangular dislocation that form the CDM. Same unit as AX, AY and AZ.|
-|NU | Poisson's ratio, optional and dimensionless (default is 0.25 for an isotropic medium).|
+
+|Output arguments|Description|
+|-------------:|:----------|
+|dV| Potency of the CDM. DV has the unit of volume, i.e. the unit of displacements, OPENING and CDM semi-axes to the power of 3.|
 
 
 ### cdmv.m
@@ -38,7 +56,9 @@ Pure Matlab/GNU Octave code fully vectorized (no loop, no if condition). Type "d
 
 ## pCDM codes
 
-For this code we introduced a difference from original function to have the total potency as one of the input parameter: the 3 volume potencies have been redefined as a total volume variation *dVtot* and two dimensionless shape parameters *A* and *B*, between 0 and 1, defined as in the upper table (see Figure 2 for examples).
+```
+[uE,uN,uV]=pcdmv(X,Y,DEPTH,OMEGAX,OMEGAY,OMEGAZ,DV,A,B,NU);
+```
 
 ![](pcdm_ab.png)
 
@@ -47,13 +67,9 @@ For this code we introduced a difference from original function to have the tota
 
 |Input arguments|Description|
 |-------------:|:----------|
-|X and Y| Horizontal coordinates (East, North) of calculation points relative to source located at (0,0). For original code `pCDM.m` it corresponds to X-X0 and Y-Y0, respectively.|
-|DEPTH  | Depth of the source from calculation points, same unit as X and Y. Note that you might add the elevation at each calculation points to approximate the topographic effects.|
-|OMEGAX OMEGAY OMEGAZ| Clockwise rotation angles around X, Y and Z axes, respectively, that specify the orientation of the pCDM in space, in degrees.|
 |DV| Total potency DV = dVX+dVY+dVZ of the point tensile dislocations that before applying the rotations are normal to the X, Y and Z axes, respectively. The potency has the unit of volume (the unit of displacements and semi-axes to the power of 3).|
 |A | Horizontal over total volume variation ratio A = dVZ/DV.|
 |B | Vertical volume variation ratio B = dVY/(dVX+dVY).|
-|NU | Poisson's ratio, optional and dimensionless (default is 0.25 for an isotropic medium).|
 
 ### pcdmv.m
 
