@@ -70,20 +70,6 @@ void AngDisDispSurf(double y1, double y2, double beta, double b1, double b2, dou
 }
 
 
-/* CoordTrans transforms the coordinates of the vectors, from
- * x1x2x3 coordinate system to X1X2X3 coordinate system. The transformation
- * matrix A whose columns are the unit base vectors of the x1x2x3. The
- * coordinates of e1,e2 and e3 in A must be given in X1X2X3.
- */
-void CoordTrans(double x1, double x2, double x3, double A[3][3], 
-		double* X1, double* X2, double* X3) {
-
-	*X1 = A[0][0]*x1 + A[0][1]*x2 + A[0][2]*x3;
-	*X2 = A[1][0]*x1 + A[1][1]*x2 + A[1][2]*x3;
-	*X3 = A[2][0]*x1 + A[2][1]*x2 + A[2][2]*x3;
-}
-
-
 /*
  * AngSetupSurf calculates the displacements associated with an angular
  * dislocation pair on each side of an RD in a half-space.
@@ -92,13 +78,12 @@ void CoordTrans(double x1, double x2, double x3, double A[3][3],
 void AngSetupFSC(double x, double y, double bX, double bY, double bZ, 
 		double* PA, double* PB, double nu2, double* ue, double* un, double* uv) {
 	
-	double A[3][3], norm, beta, null,
-		y1A, y2A, y1B,
-		y2B, y1AB, y2AB,
-		b1, b2, b3,
-		v1A, v2A, v3A,
-		v1B, v2B, v3B,
-		v1, v2, v3;
+	double A1, A2, norm, beta,
+	       y1A, y2A, y1B, y2B, 
+	       b1, b2, b3,
+	       v1A, v2A, v3A,
+	       v1B, v2B, v3B,
+	       v1, v2, v3;
 
 	beta = acos((PA[2]-PB[2])/sqrt(pow(PA[0]-PB[0],2) + pow(PA[1]-PB[1],2) + pow(PA[2]-PB[2],2)));
 
@@ -107,28 +92,23 @@ void AngSetupFSC(double x, double y, double bX, double bY, double bZ,
 		*un = 0;
 		*uv = 0;
 	} else {
+		/* A is the sparse 3x3 transformation matrix (A33 = -1, other elements are 0) */
 		norm = sqrt(pow(PB[0]-PA[0],2) + pow(PB[1]-PA[1],2));
-		/* A is the transformation matrix */
-		A[0][0] = (PB[0]-PA[0])/norm;
-		A[0][1] = (PB[1]-PA[1])/norm;
-		A[0][2] = 0;
-		A[2][0] = 0;
-		A[2][1] = 0;
-		A[2][2] = -1;
-		A[1][0] =  A[0][1];
-		A[1][1] = -A[0][0];
-		A[1][2] = 0;
+		A1 = (PB[0]-PA[0])/norm; /* = A11 = -A22 */
+		A2 = (PB[1]-PA[1])/norm; /* = A12 = A21 */
 
 		/* Transform coordinates from EFCS to the first ADCS */
-		CoordTrans(x - PA[0], y - PA[1], -PA[2], A, &y1A, &y2A, &null);
+		y1A = A1*(x - PA[0]) + A2*(y - PA[1]);
+		y2A = A2*(x - PA[0]) - A1*(y - PA[1]);
 
 		/* Transform coordinates from EFCS to the second ADCS */
-		CoordTrans(PB[0] - PA[0], PB[1] - PA[1], PB[2] - PA[2], A, &y1AB, &y2AB, &null);
-		y1B = y1A - y1AB;
-		y2B = y2A - y2AB;
+		y1B = y1A - (A1*(PB[0] - PA[0]) + A2*(PB[1] - PA[1]));
+		y2B = y2A - (A2*(PB[0] - PA[0]) - A1*(PB[1] - PA[1]));
 
 		/* Transform slip vector components from EFCS to ADCS */
-		CoordTrans(bX, bY, bZ, A, &b1, &b2, &b3);
+		b1 = A1*bX + A2*bY;
+		b2 = A2*bX - A1*bY;
+		b3 = -bZ;
 
 		/* artefact-free for the calculation points near the free surface */
 		if (beta*y1A >= 0) {
@@ -145,9 +125,9 @@ void AngSetupFSC(double x, double y, double bX, double bY, double bZ,
 		v3 = v3B - v3A;
 
 		/* Transform total displacements from ADCS to EFCS */
-		*ue = A[0][0]*v1 + A[1][0]*v2;
-		*un = A[0][1]*v1 + A[1][1]*v2;
-		*uv = A[2][2]*v3;
+		*ue = A1*v1 + A2*v2;
+		*un = A2*v1 - A1*v2;
+		*uv = -v3;
 	}
 	
 }
@@ -208,12 +188,12 @@ void cdm(double* x, double* y, double* d, double* ox, double* oy, double* oz,
 
 	for (i = 0; i < numel; i++) {
 
-		/* converts angles in radian */
+		/* converts angles into radian */
 		oxd = *(ox + i) * PI / 180;
 		oyd = *(oy + i) * PI / 180;
 		ozd = *(oz + i) * PI / 180;
 
-		/* semi-axes to full axes */
+		/* converts semi-axes to full axes */
 		ax = *(ax2 + i)*2;
 		ay = *(ay2 + i)*2;
 		az = *(az2 + i)*2;

@@ -117,14 +117,16 @@ D  = varargin{3}(:);
 OX = varargin{4}(:);
 OY = varargin{5}(:);
 OZ = varargin{6}(:);
+% AX, AY, AZ are converted to full axes
 AX = 2*varargin{7}(:);
 AY = 2*varargin{8}(:);
 AZ = 2*varargin{9}(:);
 OP = varargin{10}(:);
+% NU is converted to 1-2*NU
 if nargin < 11
-	NU = 0.25;
+	NU = 0.5; % defaut nu = 0.25
 else
-	NU = varargin{11}(:);
+	NU = 1 - 2*varargin{11}(:);
 end
 
 % normalization of sizes to allow any mixing of scalar/matrix
@@ -226,7 +228,7 @@ end
 
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-function [ue,un,uv]=RDdispSurf(X,Y,P1,P2,P3,P4,OP,nu)
+function [ue,un,uv]=RDdispSurf(X,Y,P1,P2,P3,P4,OP,nu2)
 % RDdispSurf calculates surface displacements associated with a rectangular
 % dislocation in an elastic half-space.
 
@@ -236,10 +238,10 @@ bX = OP.*Vnorm(:,1);
 bY = OP.*Vnorm(:,2);
 bZ = OP.*Vnorm(:,3);
 
-[u1,v1,w1] = AngSetupFSC(X,Y,bX,bY,bZ,P1,P2,nu); % Side P1P2
-[u2,v2,w2] = AngSetupFSC(X,Y,bX,bY,bZ,P2,P3,nu); % Side P2P3
-[u3,v3,w3] = AngSetupFSC(X,Y,bX,bY,bZ,P3,P4,nu); % Side P3P4
-[u4,v4,w4] = AngSetupFSC(X,Y,bX,bY,bZ,P4,P1,nu); % Side P4P1
+[u1,v1,w1] = AngSetupFSC(X,Y,bX,bY,bZ,P1,P2,nu2); % Side P1P2
+[u2,v2,w2] = AngSetupFSC(X,Y,bX,bY,bZ,P2,P3,nu2); % Side P2P3
+[u3,v3,w3] = AngSetupFSC(X,Y,bX,bY,bZ,P3,P4,nu2); % Side P3P4
+[u4,v4,w4] = AngSetupFSC(X,Y,bX,bY,bZ,P4,P1,nu2); % Side P4P1
 
 ue = u1 + u2 + u3 + u4;
 un = v1 + v2 + v3 + v4;
@@ -264,7 +266,7 @@ end
 
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-function [ue,un,uv]=AngSetupFSC(X,Y,bX,bY,bZ,PA,PB,nu)
+function [ue,un,uv]=AngSetupFSC(X,Y,bX,bY,bZ,PA,PB,nu2)
 % AngSetupSurf calculates the displacements associated with an angular
 % dislocation pair on each side of an RD in a half-space.
 
@@ -287,14 +289,14 @@ y2B = y2A-y2AB;
 % Transform slip vector components from EFCS to ADCS
 [b1,b2,b3] = CoordTrans(bX,bY,bZ,ey1,ey2,ey3);
 
-[v1A,v2A,v3A] = AngDisDispSurf(y1A,y2A,beta,b1,b2,b3,nu,-PA(:,3));
-[v1B,v2B,v3B] = AngDisDispSurf(y1B,y2B,beta,b1,b2,b3,nu,-PB(:,3));
+[v1A,v2A,v3A] = AngDisDispSurf(y1A,y2A,beta,b1,b2,b3,nu2,-PA(:,3));
+[v1B,v2B,v3B] = AngDisDispSurf(y1B,y2B,beta,b1,b2,b3,nu2,-PB(:,3));
 
 % artefact-free for the calculation points near the free surface
 I = (beta.*y1A)>=0;
 if any(I)
-    [v1A(I),v2A(I),v3A(I)] = AngDisDispSurf(y1A(I),y2A(I),beta(I)-pi,b1(I),b2(I),b3(I),nu,-PA(I,3));
-    [v1B(I),v2B(I),v3B(I)] = AngDisDispSurf(y1B(I),y2B(I),beta(I)-pi,b1(I),b2(I),b3(I),nu,-PB(I,3));
+    [v1A(I),v2A(I),v3A(I)] = AngDisDispSurf(y1A(I),y2A(I),beta(I)-pi,b1(I),b2(I),b3(I),nu2,-PA(I,3));
+    [v1B(I),v2B(I),v3B(I)] = AngDisDispSurf(y1B(I),y2B(I),beta(I)-pi,b1(I),b2(I),b3(I),nu2,-PB(I,3));
 end
 
 % Calculate total displacements in ADCS
@@ -317,7 +319,7 @@ end
 
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-function [v1,v2,v3] = AngDisDispSurf(y1,y2,beta,b1,b2,b3,nu,a)
+function [v1,v2,v3] = AngDisDispSurf(y1,y2,beta,b1,b2,b3,nu2,a)
 % AngDisDispSurf calculates the displacements associated with an angular
 % dislocation in a half-space.
 
@@ -330,20 +332,20 @@ r = sqrt(y1.^2 + y2.^2 + a.^2);
 
 Fi = 2*atan2(y2,(r+a).*cot(beta/2) - y1); % The Burgers function
 
-v1b1 = b1/2/pi.*((1-(1-2*nu).*cotB.^2).*Fi + y2./(r+a).*((1-2*nu).*(cotB + y1/2./(r+a)) - y1./r) - y2.*(r.*sinB - y1).*cosB./r./(r-z3));
-v2b1 = b1/2/pi.*((1-2*nu).*((.5+cotB.^2).*log(r+a)-cotB./sinB.*log(r-z3)) - 1./(r+a).*((1-2*nu).*(y1.*cotB - a/2 - y2.^2./2./(r+a)) + y2.^2./r) + y2.^2.*cosB./r./(r-z3));
-v3b1 = b1/2/pi.*((1-2*nu).*Fi.*cotB + y2./(r+a).*(2*nu + a./r) - y2.*cosB./(r-z3).*(cosB + a./r));
+v1b1 = b1.*((1 - nu2.*cotB.^2).*Fi + y2./(r+a).*(nu2.*(cotB + y1/2./(r+a)) - y1./r) - y2.*(r.*sinB - y1).*cosB./r./(r-z3));
+v2b1 = b1.*(nu2.*((.5+cotB.^2).*log(r+a)-cotB./sinB.*log(r-z3)) - 1./(r+a).*(nu2.*(y1.*cotB - a/2 - y2.^2./2./(r+a)) + y2.^2./r) + y2.^2.*cosB./r./(r-z3));
+v3b1 = b1.*(nu2.*Fi.*cotB + y2./(r+a).*(1-nu2 + a./r) - y2.*cosB./(r-z3).*(cosB + a./r));
 
-v1b2 = b2/2/pi.*(-(1-2*nu).*((.5-cotB.^2).*log(r+a) + cotB.^2.*cosB.*log(r-z3))-1./(r+a).*((1-2*nu).*(y1.*cotB + .5*a + y1.^2./2./(r+a))-y1.^2./r) + z1.*(r.*sinB-y1)./r./(r-z3));
-v2b2 = b2/2/pi.*((1+(1-2*nu).*cotB.^2).*Fi-y2./(r+a).*((1-2*nu).*(cotB + y1/2./(r+a))- y1./r) - y2.*z1./r./(r-z3));
-v3b2 = b2/2/pi.*(-(1-2*nu).*cotB.*(log(r+a) - cosB.*log(r-z3)) - y1./(r+a).*(2*nu + a./r) + z1./(r-z3).*(cosB + a./r));
+v1b2 = b2.*(-nu2.*((.5-cotB.^2).*log(r+a) + cotB.^2.*cosB.*log(r-z3))-1./(r+a).*(nu2.*(y1.*cotB + .5*a + y1.^2./2./(r+a))-y1.^2./r) + z1.*(r.*sinB-y1)./r./(r-z3));
+v2b2 = b2.*((1 + nu2.*cotB.^2).*Fi-y2./(r+a).*(nu2.*(cotB + y1/2./(r+a))- y1./r) - y2.*z1./r./(r-z3));
+v3b2 = b2.*(-nu2.*cotB.*(log(r+a) - cosB.*log(r-z3)) - y1./(r+a).*(1-nu2 + a./r) + z1./(r-z3).*(cosB + a./r));
 
-v1b3 = b3/2/pi.*(y2.*(r.*sinB - y1).*sinB./r./(r-z3));
-v2b3 = b3/2/pi.*(-y2.^2.*sinB./r./(r-z3));
-v3b3 = b3/2/pi.*(Fi + y2.*(r.*cosB + a).*sinB./r./(r-z3));
+v1b3 = b3.*(y2.*(r.*sinB - y1).*sinB./r./(r-z3));
+v2b3 = b3.*(-y2.^2.*sinB./r./(r-z3));
+v3b3 = b3.*(Fi + y2.*(r.*cosB + a).*sinB./r./(r-z3));
 
-v1 = v1b1 + v1b2 + v1b3;
-v2 = v2b1 + v2b2 + v2b3;
-v3 = v3b1 + v3b2 + v3b3;
+v1 = (v1b1 + v1b2 + v1b3)/2/pi;
+v2 = (v2b1 + v2b2 + v2b3)/2/pi;
+v3 = (v3b1 + v3b2 + v3b3)/2/pi;
 
 end
