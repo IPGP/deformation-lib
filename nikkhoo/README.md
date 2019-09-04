@@ -78,6 +78,8 @@ This is a transcription of `pcdmv.m` in C language that includes complementary s
 
 	>> mex pcdmv.c
 
+Then the function is used normally as a normal .m function (MEX functions have the priority on .m functions if they have the same name).
+
 ### pcdmdesc.m
 A small script to transform source shape parameters *A* and *B* to a human-readable string. It uses a default 10% tolerancy. Examples:
 
@@ -115,15 +117,20 @@ The codes have almost the same input parameters but different behaviors with inp
 **pcdmv.c** accepts all input arguments X, Y, DEPTH, OMEGAX, OMEGAY, OMEGAZ, DV, A, and B as scalar, vector or matrix but all must have the same number of elements or size. Mixing with scalar is prohibited so you may use `repmat()` to convert any scalar to a matrix if necessary. Last input argument NU is mandatory and must be a scalar. Output arguments will be set to the size of input arguments.
 
 ### Benchmarks
-This a basic comparison of computational times using a 2.7GHz Intel Core i7 computer for 100,000 different random models computed for 10 observation points (X,Y). All with constant NU = 0.25. Times are the minimum observed, generally the second or third run to avoid load/compilation delays.
+This a basic comparison of computational times for 100,000 different random models computed each for 10 observation points (X,Y), using a matrix `rand(1e5,10)` for each input parameter excepted for constant NU = 0.25. Times are the minimum observed, generally the second or third run to avoid load/compilation delays.
 
-Since the original scripts where vectorized for observation points only, the gain is mostly on the source parameters.
+Since the original scripts where vectorized for observation points only, they must use a ugly loop to compute the source models, while new scripts don't. This may explain the unexpected huge durations for GNU Octave tests, while Matlab seems to have better handled the loop problem.
+
+As expected, the compiled MEX functions have exactly the same performance under Matlab or GNU Octave.
 
 |code| CDM @Matlab| CDM @Octave | pCDM @Matlab| pCDM @Octave | 
 |----:|--------:|-------:|----:|----:|
-|original .m       | 3 mn|-     | 8.0 s|  5 mn |
+|original .m       | 3 mn| >30 mn| 8.0 s|  >5 mn |
 |vectorized .m     |4.6 s|  15 s| 0.8 s| 1.7 s|
-|compiled .mex (.c)|2.4 s| 2.4 s| 0.4 s| 0.4 s|
+|compiled .mex (.c)|**2.4 s**| **2.4 s**| **0.4 s**| **0.4 s**|
+
+Processor: **2.7GHz Intel Core i7**, OS: **Mac OS X 10.14**, Matlab: **8.6.0 (2015b)**, GNU Octave: **5.1.0**.
+
 
 ## Rerefences
 
