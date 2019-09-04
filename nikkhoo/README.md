@@ -28,9 +28,8 @@ The proposed scripts are literal transcriptions of the Nikkhoo's equations from 
 |DEPTH  | Depth of the source from calculation points, same unit as X and Y. Note that you might add the elevation at each calculation points to approximate the topographic effects.|
 |OMEGAX OMEGAY OMEGAZ| Clockwise rotation angles around X, Y and Z axes, respectively, that specify the orientation of the CDM in space, in degrees.|
 |NU | Poisson's ratio, optional and dimensionless (default is 0.25 for an isotropic medium).|
-
-|Output arguments|Description|
-|-------------:|:----------|
+| | |
+|**Output arguments**|**Description**|
 |uE uN uV| Calculated displacement vector components in EFCS. Will have the same unit as X, Y and DEPTH.|
 
 ## CDM code
@@ -43,9 +42,8 @@ The proposed scripts are literal transcriptions of the Nikkhoo's equations from 
 |-------------:|:----------|
 |AX AY AZ| Semi-axes of the CDM along the X, Y and Z axes, respectively, before applying the rotations. AX, AY and AZ have the same unit as X and Y.|
 |OPENING | The opening (tensile component of the Burgers vector) of the rectangular dislocation that form the CDM. Same unit as AX, AY and AZ.|
-
-|Output arguments|Description|
-|-------------:|:----------|
+| | |
+|**Output arguments**|**Description**|
 |dV| Potency of the CDM. DV has the unit of volume, i.e. the unit of displacements, OPENING and CDM semi-axes to the power of 3.|
 
 
@@ -124,7 +122,7 @@ Since the original scripts where vectorized for observation points only, the gai
 |code| CDM @Matlab| CDM @Octave | pCDM @Matlab| pCDM @Octave | 
 |----:|--------:|-------:|----:|----:|
 |original .m       | 3 mn|-     | 8.0 s|  5 mn |
-|vectorized .m     |5.5 s|  16 s| 0.9 s| 1.7 s|
+|vectorized .m     |4.6 s|  16 s| 0.9 s| 1.7 s|
 |compiled .mex (.c)|2.4 s| 2.4 s| 0.4 s| 0.4 s|
 
 ## Rerefences

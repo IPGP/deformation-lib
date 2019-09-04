@@ -252,42 +252,29 @@ end
 
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-function [X1,X2,X3]=CoordTrans(x1,x2,x3,A1,A2,A3)
-% CoordTrans transforms the coordinates of the vectors, from
-% x1x2x3 coordinate system to X1X2X3 coordinate system. The transformation
-% whose columns A1, A2 and A3 are the unit base vectors of the x1x2x3. The
-% coordinates of e1,e2 and e3 in A must be given in X1X2X3. The transpose
-% of A (i.e., A') will transform the coordinates from X1X2X3 into x1x2x3.
-
-X1 = A1(:,1).*x1 + A1(:,2).*x2 + A1(:,3).*x3;
-X2 = A2(:,1).*x1 + A2(:,2).*x2 + A2(:,3).*x3;
-X3 = A3(:,1).*x1 + A3(:,2).*x2 + A3(:,3).*x3;
-end
-
-% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 function [ue,un,uv]=AngSetupFSC(X,Y,bX,bY,bZ,PA,PB,nu2)
 % AngSetupSurf calculates the displacements associated with an angular
 % dislocation pair on each side of an RD in a half-space.
 
 SideVec = PB-PA;
 beta = acos(-SideVec(:,3)./sqrt(sum(SideVec.^2,2)));
+Vnorm = sqrt(sum(SideVec(:,1:2).^2,2));
 
-ey1 = [SideVec(:,1:2),zeros(size(X))];
-ey1 = ey1./repmat(sqrt(sum(ey1.^2,2)),1,3);
-ey3 = repmat([0 0 -1],length(X),1);
-%ey2 = cross(ey3,ey1,2);
-ey2 = [ey1(:,2),-ey1(:,1),zeros(size(X))];
+A1 = SideVec(:,1)./Vnorm;
+A2 = SideVec(:,2)./Vnorm;
 
 % Transform coordinates from EFCS to the first ADCS
-[y1A,y2A,~] = CoordTrans(X-PA(:,1),Y-PA(:,2),-PA(:,3),ey1,ey2,ey3);
+y1A = A1.*(X - PA(:,1)) + A2.*(Y - PA(:,2));
+y2A = A2.*(X - PA(:,1)) - A1.*(Y - PA(:,2));
+
 % Transform coordinates from EFCS to the second ADCS
-[y1AB,y2AB,~] = CoordTrans(SideVec(:,1),SideVec(:,2),SideVec(:,3),ey1,ey2,ey3);
-y1B = y1A-y1AB;
-y2B = y2A-y2AB;
+y1B = y1A - (A1.*SideVec(:,1) + A2.*SideVec(:,2));
+y2B = y2A - (A2.*SideVec(:,1) - A1.*SideVec(:,2));
 
 % Transform slip vector components from EFCS to ADCS
-[b1,b2,b3] = CoordTrans(bX,bY,bZ,ey1,ey2,ey3);
+b1 = A1.*bX + A2.*bY;
+b2 = A2.*bX - A1.*bY;
+b3 = -bZ;
 
 [v1A,v2A,v3A] = AngDisDispSurf(y1A,y2A,beta,b1,b2,b3,nu2,-PA(:,3));
 [v1B,v2B,v3B] = AngDisDispSurf(y1B,y2B,beta,b1,b2,b3,nu2,-PB(:,3));
@@ -305,9 +292,9 @@ v2 = v2B - v2A;
 v3 = v3B - v3A;
 
 % Transform total displacements from ADCS to EFCS
-ue = ey1(:,1).*v1 + ey2(:,1).*v2;
-un = ey1(:,2).*v1 + ey2(:,2).*v2;
-uv = ey3(:,3).*v3;
+ue = A1.*v1 + A2.*v2;
+un = A2.*v1 - A1.*v2;
+uv = -v3;
 
 k = abs(beta)<eps | abs(pi-beta)<eps;
 ue(k) = 0;
