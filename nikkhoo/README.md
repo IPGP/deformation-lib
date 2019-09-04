@@ -25,12 +25,12 @@ The proposed scripts are literal transcriptions of the Nikkhoo's equations from 
 |Input arguments|Description|
 |-------------:|:----------|
 |X and Y| Horizontal coordinates (East, North) of calculation points relative to source located at (0,0). For original codes `CDM.m` and `pCDM.m` it corresponds to X-X0 and Y-Y0, respectively.|
-|DEPTH  | Depth of the source from calculation points, same unit as X and Y. Note that you might add the elevation at each calculation points to approximate the topographic effects.|
+|DEPTH  | Depth of the source from the free surface, same unit as X and Y. Note that you might set DEPTH as a vector/matrix of the same size as X and Y and add to it the elevation for each observation points in order to approximate the topographic effects (method from *Williams and Wadge*, 2000).|
 |OMEGAX OMEGAY OMEGAZ| Clockwise rotation angles around X, Y and Z axes, respectively, that specify the orientation of the CDM in space, in degrees.|
 |NU | Poisson's ratio, optional and dimensionless (default is 0.25 for an isotropic medium).|
 | | |
 |**Output arguments**|**Description**|
-|uE uN uV| Calculated displacement vector components in EFCS. Will have the same unit as X, Y and DEPTH.|
+|uE, uN, uV| Calculated displacement vector components in EFCS. Will have the same unit as X, Y and DEPTH.|
 
 ## CDM code
 
@@ -122,7 +122,7 @@ Since the original scripts where vectorized for observation points only, the gai
 |code| CDM @Matlab| CDM @Octave | pCDM @Matlab| pCDM @Octave | 
 |----:|--------:|-------:|----:|----:|
 |original .m       | 3 mn|-     | 8.0 s|  5 mn |
-|vectorized .m     |4.6 s|  16 s| 0.9 s| 1.7 s|
+|vectorized .m     |4.6 s|  15 s| 0.8 s| 1.7 s|
 |compiled .mex (.c)|2.4 s| 2.4 s| 0.4 s| 0.4 s|
 
 ## Rerefences
@@ -130,5 +130,7 @@ Since the original scripts where vectorized for observation points only, the gai
 Nikkhoo, M., Walter, T. R., Lundgren, P. R., Prats-Iraola, P. (2017). Compound dislocation models (CDMs) for volcano deformation analyses.  *Geophys. J. Int.*, 208(2): 877-894, doi:10.1093/gji/ggw427
 
 [www.volcanodeformation.com](http://www.volcanodeformation.com)
+
+Williams C.A. and G. Wagde (2000). An accurate and efficient method for including the effects of topography in three-dimensional elastic models of ground deformation with applications to radar interferometry, *J. Geophys. Res.*, 105(B4), 8103-8120.
 
 See source codes for copyright and full license information.
