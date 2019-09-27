@@ -25,7 +25,7 @@ The proposed scripts are literal transcriptions of the Nikkhoo's equations from 
 |Input arguments|Description|
 |-------------:|:----------|
 |X and Y| Horizontal coordinates (East, North) of calculation points relative to source located at (0,0). For original codes `CDM.m` and `pCDM.m` it corresponds to X-X0 and Y-Y0, respectively.|
-|DEPTH  | Depth of the source from the free surface, same unit as X and Y. Note that you might set DEPTH as a vector/matrix of the same size as X and Y and add to it the elevation for each observation points in order to approximate the topographic effects (method from *Williams and Wadge*, 2000).|
+|DEPTH  | Depth of the source from the free surface, same unit as X and Y. Note that you might set DEPTH as a vector/matrix of the same size as X and Y and add to it the elevation for each observation points in order to approximate the topographic effects (method from *Williams and Wadge*, 1998).|
 |OMEGAX OMEGAY OMEGAZ| Clockwise rotation angles around X, Y and Z axes, respectively, that specify the orientation of the CDM in space, in degrees.|
 |NU | Poisson's ratio, optional and dimensionless (default is 0.25 for an isotropic medium).|
 | | |
@@ -138,6 +138,6 @@ Nikkhoo, M., Walter, T. R., Lundgren, P. R., Prats-Iraola, P. (2017). Compound d
 
 [www.volcanodeformation.com](http://www.volcanodeformation.com)
 
-Williams C.A. and G. Wagde (2000). An accurate and efficient method for including the effects of topography in three-dimensional elastic models of ground deformation with applications to radar interferometry, *J. Geophys. Res.*, 105(B4), 8103-8120.
+Williams, C. A., and G. Wadge (1998). The effects of topography on magma chamber deformation models: Application to Mt. Etna and radar interferometry, *Geophys. Res. Lett.*, **25**(10), 1549-1552, doi:10.1029/98gl01136.
 
 See source codes for copyright and full license information.
