@@ -65,9 +65,9 @@ Pure Matlab/GNU Octave code fully vectorized (no loop, no if condition). Type "d
 
 |Input arguments|Description|
 |-------------:|:----------|
-|DV| Total potency DV = dVX+dVY+dVZ of the point tensile dislocations that before applying the rotations are normal to the X, Y and Z axes, respectively. The potency has the unit of volume (the unit of displacements and semi-axes to the power of 3).|
-|A | Horizontal over total volume variation ratio A = dVZ/DV.|
-|B | Vertical volume variation ratio B = dVY/(dVX+dVY).|
+|DV| Total potency **DV = dVX+dVY+dVZ** of the point tensile dislocations that before applying the rotations are normal to the X, Y and Z axes, respectively. The potency has the unit of volume (the unit of displacements and semi-axes to the power of 3).|
+|A | Horizontal over total volume variation ratio **A = dVZ/DV**. dVZ is named "horizontal" volume variation because it applies for the tensile dislocation perpendicular to Z-axis.|
+|B | Vertical volume variation ratio **B = dVY/(dVX+dVY)**. dVX and dVY are named "vertical" volume variations because they correpond to tensile dislocations perpendicular to X-axis and Y-axis.|
 
 ### pcdmv.m
 
