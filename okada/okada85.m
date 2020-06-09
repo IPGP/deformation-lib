@@ -21,7 +21,7 @@ function varargout=okada85(varargin)
 %	   OPEN   : dislocation in tensile component (same unit as SLIP)
 %
 %	returns the following variables (same matrix size as E and N):
-%	   uN,uE,uZ        : displacements (unit of SLIP and OPEN)
+%	   uE,uN,uZ        : displacements (unit of SLIP and OPEN)
 %	   uZE,uZN         : tilts (in rad * FACTOR)
 %	   uNN,uNE,uEN,uEE : horizontal strains POSITIVE = COMPRESSION (unit of FACTOR)
 %
