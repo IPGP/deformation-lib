@@ -132,7 +132,7 @@ As expected, the compiled MEX functions have exactly the same performance under 
 Processor: **2.7GHz Intel Core i7**, OS: **Mac OS X 10.14**, Matlab: **8.6.0 (2015b)**, GNU Octave: **5.1.0**.
 
 
-## Rerefences
+## References
 
 Nikkhoo, M., Walter, T. R., Lundgren, P. R., Prats-Iraola, P. (2017). Compound dislocation models (CDMs) for volcano deformation analyses.  *Geophys. J. Int.*, 208(2): 877-894, doi:10.1093/gji/ggw427
 
