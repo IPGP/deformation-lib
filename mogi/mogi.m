@@ -1,18 +1,22 @@
-function [ur,uz,dt,er,et,dg] = mogi(varargin)
-%MOGI	Mogi's model (point source in elastic half-space).
-%	[Ur,Uz,Dt,Er,Et] = MOGI(R,F,V,nu) or MOGI(R,F,A,P,E,nu) computes radial 
-%	and vertical displacements Ur and Uz, ground tilt Dt, radial and 
-%	tangential strain Er and Et on surface, at a radial distance R 
-%	from the top of the source due to a hydrostatic pressure inside a 
-%	sphere of radius A at depth F, in a homogeneous, semi-infinite elastic
-%	body and approximation for A << F (center of dilatation). Formula by
-%	Anderson [1936] and Mogi [1958].
+function [ur,uz,dt,er,et] = mogi(varargin)
+%MOGI   Mogi's model (point source of dilatation in elastic half-space).
+%   [Ur,Uz,Dt,Er,Et] = MOGI(R,F,A,P,E,nu) computes at the surface radial 
+%   and vertical displacements Ur and Uz, ground tilt Dt, radial and 
+%   tangential strain Er and Et at the surface, at a radial distance R from
+%   the top of the source due to a hydrostatic pressure inside a sphere of 
+%   radius A at depth F, in a homogeneous, semi-infinite elastic body and 
+%   approximation for A << F (center of dilatation). Formula by Anderson 
+%   [1936] and Mogi [1958].
 %
-%	MOGI(R,F,V) and MOGI(R,F,A,µ,P) are also allowed for compatibility 
+%   MOGI(R,F,V,nu) is the point approximation of Mogi's model, with volume
+%   variation V as source of dilatation potency, a solution which does not
+%   depend on A, P neither E input parameters.
+%
+%	MOGI(R,F,A,µ,P) and MOGI(R,F,V) are also allowed for compatibility 
 %	(Mogi's original equation considers an isotropic material with Lamé's 
 %	constants equal, i.e., lambda = µ, Poisson's ratio = 0.25).
 %
-%	Input variables are:
+%	Input parameters:
 %	   F: depth of the center of the sphere from the surface,
 %	   V: volumetric change of the sphere,
 %	   A: radius of the sphere,
@@ -20,6 +24,13 @@ function [ur,uz,dt,er,et,dg] = mogi(varargin)
 %	   E: elasticity (Young's modulus),
 %	  nu: Poisson's ratio,
 %	   µ: rigidity (Lamé's constant in case of isotropic material).
+%
+%   Output parameters:
+%     Ur: radial displacement (same unit as R, F and A)
+%     Uz: tangential displacement (same unit as R, F and A)
+%     Dt: ground tilt (in rad)
+%     Er: radial strain
+%     Et: tangential strain
 %
 %	Notes:
 %		- Equations are all vectorized, so variables R,F,V,A,µ and P can 
@@ -41,7 +52,7 @@ function [ur,uz,dt,er,et,dg] = mogi(varargin)
 %	Author: François Beauducel <beauducel@ipgp.fr>
 %	  Institut de Physique du Globe de Paris
 %	Created: 1997
-%	Updated: 2012-04-05
+%	Updated: 2019-09-15
 %
 %	References:
 %	  Anderson, E.M., Dynamics of the formation of cone-sheets, ring-dikes,
@@ -53,7 +64,7 @@ function [ur,uz,dt,er,et,dg] = mogi(varargin)
 %	Acknowledgments: R. Grandin, B. Taisne
 
 
-%	Copyright (c) 1997-2011, François Beauducel, covered by BSD License.
+%	Copyright (c) 1997-2019, François Beauducel, covered by BSD License.
 %	All rights reserved.
 %
 %	Redistribution and use in source and binary forms, with or without 
@@ -78,22 +89,22 @@ function [ur,uz,dt,er,et,dg] = mogi(varargin)
 %	ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE 
 %	POSSIBILITY OF SUCH DAMAGE.
 
-if nargin < 3 || nargin > 6
-	error('Wrong number of argument.')
-end
+%if nargin < 3 || nargin > 6
+%	error('Wrong number of argument.')
+%end
 
-for i = 1:nargin
-	if ~isnumeric(varargin{i})
-		error('All input arguments must be numeric.')
-	end
-end
+%for i = 1:nargin
+% 	if ~isnumeric(varargin{i})
+% 		error('All input arguments must be numeric.')
+% 	end
+% end
 
 % to check if input arguments have compatible sizes, constructs a complex
 % vector of sizes, then uses UNIQUE on variables that are not scalar
-sz = complex(cellfun('size',varargin,1),cellfun('size',varargin,2));
-if length(unique(sz(sz~=complex(1,1)))) > 1
-	error('All inputs must be scalar or matrix of the same size.')
-end
+% sz = complex(cellfun('size',varargin,1),cellfun('size',varargin,2));
+% if length(unique(sz(sz~=complex(1,1)))) > 1
+% 	error('All inputs must be scalar or matrix of the same size.')
+% end
 
 r = varargin{1};
 f = varargin{2};
