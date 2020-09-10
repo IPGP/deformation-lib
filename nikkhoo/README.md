@@ -123,7 +123,7 @@ Since the original scripts where vectorized for observation points only, they mu
 
 As expected, the compiled MEX functions have exactly the same performance under Matlab or GNU Octave.
 
-|code| CDM @Matlab| CDM @Octave | pCDM @Matlab| pCDM @Octave | 
+|code| CDM @Matlab| CDM @Octave | pCDM @Matlab| pCDM @Octave |
 |----:|--------:|-------:|----:|----:|
 |original .m       | 3 mn| >30 mn| 8.0 s|  >5 mn |
 |vectorized .m     |4.6 s|  15 s| 0.8 s| 1.7 s|
@@ -134,7 +134,9 @@ Processor: **2.7GHz Intel Core i7**, OS: **Mac OS X 10.14**, Matlab: **8.6.0 (20
 
 ## References
 
-Nikkhoo, M., Walter, T. R., Lundgren, P. R., Prats-Iraola, P. (2017). Compound dislocation models (CDMs) for volcano deformation analyses.  *Geophys. J. Int.*, 208(2): 877-894, doi:10.1093/gji/ggw427
+Beauducel F., A. Peltier, A. Villié, W. Suryanto (2020). Mechanical imaging of a volcano plumbing system from GNSS unsupervised modeling, *Geophys. Res. Lett.*, https://doi.org/10.1029/2020GL089419.
+
+Nikkhoo, M., Walter, T. R., Lundgren, P. R., Prats-Iraola, P. (2017). Compound dislocation models (CDMs) for volcano deformation analyses.  *Geophys. J. Int.*, 208(2): 877-894, https://doi.org/10.1093/gji/ggw427
 
 [www.volcanodeformation.com](http://www.volcanodeformation.com)
 
