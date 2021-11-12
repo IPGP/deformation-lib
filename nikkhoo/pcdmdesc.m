@@ -16,9 +16,9 @@ function s = pcdmdesc(a,b,tol)
 % 		A > 0, B > 0 : ellipsoid
 %
 %
-%	Author: F. Beauducel / WEBOBS
+%	Authors: F. Beauducel, A. Villié / WEBOBS
 %	Created: 2019-02-21 in Yogyakarta (Indonesia)
-%	Updated: 2019-06-06
+%	Updated: 2020-04-17
 
 if nargin < 2 || any([a,b] < 0 | [a,b] > 1)
 	error('A and B must be scalars between 0 and 1');
@@ -33,15 +33,15 @@ end
 s = 'ellipsoid';
 
 if a < tol
-	s = 'vertical ellipsoid';
+	s = 'vert. ellipsoid';
 	if b < tol
-		s = 'vertical EW dyke';
+		s = 'vert. EW dyke';
 	end
 	if b > (1 - tol)
-		s = 'vertical NS dyke';
+		s = 'vert. NS dyke';
 	end
 	if abs(b - 1/2) < tol
-		s = 'vertical pipe';
+		s = 'vert. pipe';
 	end
 end
 
@@ -58,6 +58,5 @@ if abs(b - 1/2) < tol
 end
 
 if a > (1 - tol)
-	s = 'sill';
+	s = 'horiz. sill';
 end
-
