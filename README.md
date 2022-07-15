@@ -2,7 +2,7 @@
 
 ## Summary
 
-Some basic analytical models to compute surface deformations in elastic half-space. All codes are pure Matlab/Octave vectorized language.
+Some basic analytical models to compute surface deformations in elastic half-space. Most of the codes are pure Matlab/Octave vectorized language, some are written in C for optimization.
 
 ### [Mogi](mogi)
 Point source in elastic half-space, approximation for sphere of radius a &lt;&lt; f to compute displacements, tilt and strain at surface [_Mogi_, 1958].
