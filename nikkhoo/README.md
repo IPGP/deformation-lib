@@ -27,12 +27,12 @@ The proposed scripts are literal transcriptions of the Nikkhoo's equations from 
 |X and Y| Horizontal coordinates (East, North) of calculation points relative to source located at (0,0). For original codes `CDM.m` and `pCDM.m` it corresponds to X-X0 and Y-Y0, respectively.|
 |DEPTH  | Depth of the source from the free surface, same unit as X and Y. Note that you might set DEPTH as a vector/matrix of the same size as X and Y and add to it the elevation for each observation points in order to approximate the topographic effects (method from *Williams and Wadge*, 1998).|
 |&omega;X, &omega;Y, &omega;Z| Clockwise rotation angles around X, Y and Z axes, respectively, that specify the orientation of the CDM in space, in degrees.|
-|NU | Poisson's ratio, optional and dimensionless (default is 0.25 for an isotropic medium).|
+|&nu; | Poisson's ratio, optional and dimensionless (default is 0.25 for an isotropic medium).|
 | | |
 |**Output arguments**|**Description**|
 |uE, uN, uV| Calculated displacement vector components in EFCS. Will have the same unit as X, Y and DEPTH.|
 
-## CDM code
+## CDM codes
 
 ```
 [uE,uN,uV,DV]=cdmv(X,Y,DEPTH,OMEGAX,OMEGAY,OMEGAZ,AX,AY,AZ,OPENING,NU);
@@ -50,6 +50,13 @@ The proposed scripts are literal transcriptions of the Nikkhoo's equations from 
 ### cdmv.m
 
 Pure Matlab/GNU Octave code fully vectorized (no loop, no if condition). Type "doc cdmv" for help, syntax and example, and see script comments for details.
+
+### cdmv.c
+This is a transcription of `cdmv.m` in C language that includes complementary subfunction `mexFunction()` to be compiled as a MEX file (Matlab/Octave executable `.mex`). To make the binary for your computer architecture, you must install a compiler first then type at the command line:
+
+	>> mex cdmv.c
+
+Then the function is used normally as a `.m` function (`.mex` have the priority on `.m` functions if they have the same name).
 
 
 ## pCDM codes
@@ -74,11 +81,10 @@ Pure Matlab/GNU Octave code fully vectorized (no loop, no if condition). Type "d
 Pure Matlab/GNU Octave code fully vectorized (no loop, no if condition). Type "doc pcdmv" for help, syntax and example, and see script comments for details.
 
 ### pcdmv.c
-This is a transcription of `pcdmv.m` in C language that includes complementary subfunction `mexFunction()` to be compiled as a MEX file (Matlab/Octave executable). To make the binary for your computer architecture, you must install a compiler first then type at the Matlab/Octave command line:
+This is a transcription of `pcdmv.m` in C language. To make the binary for your computer architecture, you must install a compiler first then type at the command line:
 
 	>> mex pcdmv.c
 
-Then the function is used normally as a normal .m function (MEX functions have the priority on .m functions if they have the same name).
 
 ### pcdmdesc.m
 A small script to transform source shape parameters *A* and *B* to a human-readable string. It uses a default 10% tolerancy. Examples:
@@ -102,24 +108,24 @@ The codes have almost the same input parameters but different behaviors with inp
 
 ### Originals by Nikkhoo (2016)
 
-**CDM.m** accepts vectors or matrix only for X and Y observation points coordinates. Other input parameters defining the source X0, Y0, DEPTH, OMEGAX, OMEGAY, OMEGAZ, AX, AY, AZ, OPENING and NU must be scalars. If the CDM source is partly/totally above the surface, the code exists with an error.
+**CDM.m** accepts vectors or matrix only for X and Y observation points coordinates. Other input parameters defining the source X0, Y0, DEPTH, &omega;X, &omega;Y, &omega;Z, AX, AY, AZ, OPENING and NU must be scalars. If the CDM source is partly/totally above the surface, the code exists with an error.
 
-**pCDM.m** accepts vectors or matrix only for X and Y observation points coordinates. Other input parameters defining the source X0, Y0, DEPTH, OMEGAX, OMEGAY, OMEGAZ, DVX, DVY, DVZ, and NU must be scalars.
+**pCDM.m** accepts vectors or matrix only for X and Y observation points coordinates. Other input parameters defining the source X0, Y0, DEPTH, &omega;X, &omega;Y, &omega;Z, DVX, DVY, DVZ, and NU must be scalars.
 
 ### Vectorized Matlab/GNU Octave
-**cdmv.m** accepts scalar, vector or matrix of the same size for all input parameters X, Y, DEPTH, OMEGAX, OMEGAY, OMEGAZ, AX, AY, AZ, OPENING, and optional NU, and any of them can be also a scalar, excepted for X: since output arguments will be set to the same size as X, if X is a scalar and other input arguments are vectors or matrix, you must use `repmat(X,...)` to make X also a vector or matrix. For other input arguments, any mixing between matrix and scalars are acceptable (if all matrix have the same size, of course). If the CDM source is partly/totally above the surface, the code returns NaN values.
+**cdmv.m** accepts scalar, vector or matrix of the same size for all input parameters X, Y, DEPTH, &omega;X, &omega;Y, &omega;Z, AX, AY, AZ, OPENING, and optional &nu;, and any of them can be also a scalar, excepted for X: since output arguments will be set to the same size as X, if X is a scalar and other input arguments are vectors or matrix, you must use `repmat(X,...)` to make X also a vector or matrix. For other input arguments, any mixing between matrix and scalars are acceptable (if all matrix have the same size, of course). If the CDM source is partly/totally above the surface, the code returns NaN values.
 
-**pcdmv.m** accepts scalar, vector or matrix of the same size for all input parameters X, Y, DEPTH, OMEGAX, OMEGAY, OMEGAZ, DV, A, B, and optional NU, and any of them can be also a scalar, excepted for X: since output arguments will be set to the same size as X, if X is a scalar and other input arguments are vectors or matrix, you must use `repmat(X,...)` to make X also a vector or matrix. For other input arguments, any mixing between matrix and scalars are acceptable (if all matrix have the same size, of course).
+**pcdmv.m** accepts scalar, vector or matrix of the same size for all input parameters X, Y, DEPTH, &omega;X, &omega;Y, &omega;Z, DV, A, B, and optional &nu;, and any of them can be also a scalar, excepted for X: since output arguments will be set to the same size as X, if X is a scalar and other input arguments are vectors or matrix, you must use `repmat(X,...)` to make X also a vector or matrix. For other input arguments, any mixing between matrix and scalars are acceptable (if all matrix have the same size, of course).
 
 ### Compiled C as MEX
-**cdmv.c** accepts all input arguments X, Y, DEPTH, OMEGAX, OMEGAY, OMEGAZ, AX, AY, AZ, and OPENING as scalar, vector or matrix but all must have the same number of elements or size. Mixing with scalar is prohibited so you may use `repmat()` to convert any scalar to a matrix if necessary. Last input argument NU is mandatory and must be a scalar. Output arguments will be set to the size of input arguments.
+**cdmv.c** accepts all input arguments X, Y, DEPTH, &omega;X, &omega;Y, &omega;Z, AX, AY, AZ, and OPENING as scalar, vector or matrix but all must have the same number of elements or size. Mixing with scalar is prohibited so you may use `repmat()` to convert any scalar to a matrix if necessary. Last input argument NU is mandatory and must be a scalar. Output arguments will be set to the size of input arguments.
 
-**pcdmv.c** accepts all input arguments X, Y, DEPTH, OMEGAX, OMEGAY, OMEGAZ, DV, A, and B as scalar, vector or matrix but all must have the same number of elements or size. Mixing with scalar is prohibited so you may use `repmat()` to convert any scalar to a matrix if necessary. Last input argument NU is mandatory and must be a scalar. Output arguments will be set to the size of input arguments.
+**pcdmv.c** accepts all input arguments X, Y, DEPTH, &omega;X, &omega;Y, &omega;Z, DV, A, and B as scalar, vector or matrix but all must have the same number of elements or size. Mixing with scalar is prohibited so you may use `repmat()` to convert any scalar to a matrix if necessary. Last input argument NU is mandatory and must be a scalar. Output arguments will be set to the size of input arguments.
 
 ### Benchmarks
 This a basic comparison of computational times for 100,000 different random models computed each for 10 observation points (X,Y), using a matrix `rand(1e5,10)` for each input parameter excepted for constant &nu; = 0.25. Times are the minimum observed, generally the second or third run to avoid load/compilation delays.
 
-Since the original .m scripts where vectorized for observation points only (and not source parameters), they must use a ugly loop to compute different source models, while new scripts don't. This may explain the unexpected huge durations for GNU Octave tests, while Matlab seems to have better handled the loop problem. *Python/Numpy* versions have been written by Tara Shreve.
+Since the original `.m` scripts where vectorized for observation points only (and not for source parameters), they use a ugly loop to compute different source models, while new scripts don't. This may explain the unexpected huge durations for GNU Octave tests, while Matlab seems to have better handled the loop problem. *Python/Numpy* versions used below have been written by Tara Shreve.
 
 As expected, the compiled MEX functions have exactly the same performance under Matlab or GNU Octave.
 
