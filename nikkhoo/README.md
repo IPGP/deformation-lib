@@ -119,7 +119,7 @@ The codes have almost the same input parameters but different behaviors with inp
 ### Benchmarks
 This a basic comparison of computational times for 100,000 different random models computed each for 10 observation points (X,Y), using a matrix `rand(1e5,10)` for each input parameter excepted for constant &nu; = 0.25. Times are the minimum observed, generally the second or third run to avoid load/compilation delays.
 
-Since the original .m scripts where vectorized for observation points only (and not source parameters), they must use a ugly loop to compute different source models, while new scripts don't. This may explain the unexpected huge durations for GNU Octave tests, while Matlab seems to have better handled the loop problem.
+Since the original .m scripts where vectorized for observation points only (and not source parameters), they must use a ugly loop to compute different source models, while new scripts don't. This may explain the unexpected huge durations for GNU Octave tests, while Matlab seems to have better handled the loop problem. *Python/Numpy* versions have been written by Tara Shreve.
 
 As expected, the compiled MEX functions have exactly the same performance under Matlab or GNU Octave.
 
