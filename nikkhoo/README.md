@@ -26,7 +26,7 @@ The proposed scripts are literal transcriptions of the Nikkhoo's equations from 
 |-------------:|:----------|
 |X and Y| Horizontal coordinates (East, North) of calculation points relative to source located at (0,0). For original codes `CDM.m` and `pCDM.m` it corresponds to X-X0 and Y-Y0, respectively.|
 |DEPTH  | Depth of the source from the free surface, same unit as X and Y. Note that you might set DEPTH as a vector/matrix of the same size as X and Y and add to it the elevation for each observation points in order to approximate the topographic effects (method from *Williams and Wadge*, 1998).|
-|OMEGAX OMEGAY OMEGAZ| Clockwise rotation angles around X, Y and Z axes, respectively, that specify the orientation of the CDM in space, in degrees.|
+|&omega;X, &omega;Y, &omega;Z| Clockwise rotation angles around X, Y and Z axes, respectively, that specify the orientation of the CDM in space, in degrees.|
 |NU | Poisson's ratio, optional and dimensionless (default is 0.25 for an isotropic medium).|
 | | |
 |**Output arguments**|**Description**|
@@ -117,19 +117,19 @@ The codes have almost the same input parameters but different behaviors with inp
 **pcdmv.c** accepts all input arguments X, Y, DEPTH, OMEGAX, OMEGAY, OMEGAZ, DV, A, and B as scalar, vector or matrix but all must have the same number of elements or size. Mixing with scalar is prohibited so you may use `repmat()` to convert any scalar to a matrix if necessary. Last input argument NU is mandatory and must be a scalar. Output arguments will be set to the size of input arguments.
 
 ### Benchmarks
-This a basic comparison of computational times for 100,000 different random models computed each for 10 observation points (X,Y), using a matrix `rand(1e5,10)` for each input parameter excepted for constant NU = 0.25. Times are the minimum observed, generally the second or third run to avoid load/compilation delays.
+This a basic comparison of computational times for 100,000 different random models computed each for 10 observation points (X,Y), using a matrix `rand(1e5,10)` for each input parameter excepted for constant &nu; = 0.25. Times are the minimum observed, generally the second or third run to avoid load/compilation delays.
 
-Since the original scripts where vectorized for observation points only, they must use a ugly loop to compute the source models, while new scripts don't. This may explain the unexpected huge durations for GNU Octave tests, while Matlab seems to have better handled the loop problem.
+Since the original .m scripts where vectorized for observation points only (and not source parameters), they must use a ugly loop to compute different source models, while new scripts don't. This may explain the unexpected huge durations for GNU Octave tests, while Matlab seems to have better handled the loop problem.
 
 As expected, the compiled MEX functions have exactly the same performance under Matlab or GNU Octave.
 
-|code| CDM @Matlab| CDM @Octave | pCDM @Matlab| pCDM @Octave |
-|----:|--------:|-------:|----:|----:|
-|original .m       | 3 mn| >30 mn| 8.0 s|  >5 mn |
-|vectorized .m     |4.6 s|  15 s| 0.8 s| 1.7 s|
-|compiled .mex (.c)|**2.4 s**| **2.4 s**| **0.4 s**| **0.4 s**|
+|code| CDM @Matlab| CDM @Octave | CDM @Python | pCDM @Matlab| pCDM @Octave | pCDM @Python |
+|---:|---:|---:|---:|---:|---:|---:|
+|original       | 2 mn| 28 mn| -| 4.1 s|  2 mn 41 s | -
+|vectorized     |**5.1 s**| 17 s| 13 s| **0.76 s**| 1.7 s| 1.3 s
+|compiled .mex (.c)|**2.4 s**| **2.4 s**| -| **0.4 s**| **0.4 s**| -
 
-Processor: **2.7GHz Intel Core i7**, OS: **Mac OS X 10.14**, Matlab: **8.6.0 (2015b)**, GNU Octave: **5.1.0**.
+*Processor: **2.7GHz Intel Core i7**, OS: **Mac OS X 12.6**, Matlab: **9.12.0 (2022a)**, GNU Octave: **6.2.0**, Python: **3.9**.*
 
 
 ## References
