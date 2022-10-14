@@ -127,16 +127,15 @@ This a basic comparison of computational times for 100,000 different random mode
 
 Since the original `.m` scripts where vectorized for observation points only (and not for source parameters), they use a ugly loop to compute different source models, while new scripts don't. This may explain the unexpected huge durations for GNU Octave tests, while Matlab seems to have better handled the loop problem. *Python/Numpy* versions used below have been written by Tara Shreve.
 
-As expected, the compiled MEX functions have exactly the same performance under Matlab or GNU Octave.
-
 |code| CDM @Matlab| CDM @Octave | CDM @Python | pCDM @Matlab| pCDM @Octave | pCDM @Python |
 |---:|---:|---:|---:|---:|---:|---:|
 |original       | 2 mn| 28 mn| -| 4.1 s|  2 mn 41 s | -
 |vectorized     |**5.1 s**| 17 s| 13 s| **0.76 s**| 1.7 s| 1.3 s
 |compiled .mex (.c)|**2.4 s**| **2.4 s**| -| **0.4 s**| **0.4 s**| -
 
-*Processor: **2.7GHz Intel Core i7**, OS: **Mac OS X 12.6**, Matlab: **9.12.0 (2022a)**, GNU Octave: **6.2.0**, Python: **3.9**.*
+<small>*Processor: **2.7GHz Intel Core i7**, OS: **Mac OS X 12.6**, Matlab: **9.12.0 (2022a)**, GNU Octave: **6.2.0**, Python: **3.9**.*</small>
 
+As expected, the compiled MEX functions have the best performance (equally under Matlab or GNU Octave). Compared to this reference, the vectorized scripts have respectively a computation time factor of about **2.1** (Matlab), **5.4** (Python), and **7.1** (Octave) for CDM, and **1.9** (Matlab), **3.2** (Python), and **4.2** (Octave) for pCDM.
 
 ## References
 
