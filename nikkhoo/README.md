@@ -65,9 +65,9 @@ Then the function is used normally as a `.m` function (`.mex` have the priority 
 [uE,uN,uV]=pcdmv(X,Y,DEPTH,OMEGAX,OMEGAY,OMEGAZ,DV,A,B,NU);
 ```
 
-![](pcdm_ab.png)
+![](beauducel_grl2020_fig2.png)
 
-*Figure 2. Example of source shapes that can be simulated by pCDM. On this figure surface of each point dislocation is enlarged to be proportional to its associated volume variation.*
+*Figure 2. Rotation angle definition and example of source shapes that can be simulated by pCDM. On this figure surface of each point dislocation is enlarged to be proportional to its associated volume variation (after Beauducel et al., GRL 2020).*
 
 
 |Input arguments|Description|
@@ -135,7 +135,7 @@ Since the original `.m` scripts where vectorized for observation points only (an
 
 <small>*Processor: **2.7GHz Intel Core i7**, OS: **Mac OS X 12.6**, Matlab: **9.12.0 (2022a)**, GNU Octave: **6.2.0**, Python: **3.9**.*</small>
 
-As expected, the compiled MEX functions have the best performance (equally under Matlab or GNU Octave). Compared to this reference, the vectorized scripts have respectively a computation time factor of about **2.1** (Matlab), **5.4** (Python), and **7.1** (Octave) for CDM, and **1.9** (Matlab), **3.2** (Python), and **4.2** (Octave) for pCDM.
+As expected, the compiled MEX functions have the best performance (equally under Matlab or GNU Octave). Compared to this reference as **1.0**, the vectorized scripts have respectively a computation runtime factors of about **2.1** (Matlab), **5.4** (Python), and **7.1** (Octave) for CDM, and **1.9** (Matlab), **3.2** (Python), and **4.2** (Octave) for pCDM.
 
 ## References
 
