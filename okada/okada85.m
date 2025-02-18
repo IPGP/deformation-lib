@@ -78,7 +78,7 @@ function varargout=okada85(varargin)
 %	Author: François Beauducel <beauducel@ipgp.fr>
 %	   Institut de Physique du Globe de Paris
 %	Created: 1997
-%	Updated: 2014-05-24
+%	Updated: 2025-02-18
 %
 %	References:
 %	   Aki K., and P. G. Richards, Quantitative seismology, Freemann & Co,
@@ -89,6 +89,7 @@ function varargout=okada85(varargin)
 %	Acknowledgments: Dmitry Nicolsky, Qian Yao, Halldor Geirsson
 
 %	Development history:
+%      [2025-02-18]: fixes an issue with DEPTH parameter.
 %	   [2014-05-24]: fixes a bug for tilt calculation (K1) when DIP=90.
 %	      Detected by Halldor Geirsson.
 %	   [2012-11-08]: solves partially mathematical singularities in 
@@ -104,7 +105,7 @@ function varargout=okada85(varargin)
 %	   [2010-09-24]: bugs correction in the syntax of I1, K2 and uyy_tf
 %	      functions, affecting some components. Detected by Dmitry Nicolsky.
 %
-%	Copyright (c) 1997-2014, François Beauducel, covered by BSD License.
+%	Copyright (c) 1997-2025, François Beauducel, covered by BSD License.
 %	All rights reserved.
 %
 %	Redistribution and use in source and binary forms, with or without 
@@ -286,7 +287,7 @@ if plotflag
 	alpha = pi/2 - strike;
 	x_fault = L/2*cos(alpha)*[-1,1,1,-1] + sin(alpha)*cos(dip)*W/2*[-1,-1,1,1];
 	y_fault = L/2*sin(alpha)*[-1,1,1,-1] + cos(alpha)*cos(dip)*W/2*[1,1,-1,-1];
-	z_fault = -d + sin(dip)*W*[1,1,0,0];
+	z_fault = -d + sin(dip)*W*[1,1,1,1]/2;
 	ddx = U1*cos(alpha) - U2*sin(alpha)*cos(dip) + U3*sin(alpha)*sin(dip);
 	ddy = U1*sin(alpha) + U2*cos(alpha)*cos(dip) - U3*cos(alpha)*sin(dip);
 	ddz = U2*sin(dip) + U3*cos(dip);
