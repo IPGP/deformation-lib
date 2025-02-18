@@ -7,7 +7,7 @@ function okada_checklist
 %	      half-space, Bull. Seismol. Soc. Am., 75:4, 1135-1154, 1985.
 %
 % Author: Francois Beauducel <beauducel@ipgp.fr>
-% Date: 2011-03-07
+% Created: 2011-03-07
 
 
 fprintf('\n=========================================\n');

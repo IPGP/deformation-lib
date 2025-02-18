@@ -10,13 +10,13 @@ function varargout=okada85(varargin)
 %	   E,N    : coordinates of observation points in a geographic referential 
 %	            (East,North,Up) relative to fault centroid (units are described below)
 %	   DEPTH  : depth of the fault centroid (DEPTH > 0)
-%	   STRIKE : fault trace direction (0 to 360° relative to North), defined so 
+%	   STRIKE : fault trace direction (0 to 360Â° relative to North), defined so 
 %	            that the fault dips to the right side of the trace
-%	   DIP    : angle between the fault and a horizontal plane (0 to 90°)
+%	   DIP    : angle between the fault and a horizontal plane (0 to 90ï¿½)
 %	   LENGTH : fault length in the STRIKE direction (LENGTH > 0)
 %	   WIDTH  : fault width in the DIP direction (WIDTH > 0)
 %	   RAKE   : direction the hanging wall moves during rupture, measured relative
-%	            to the fault STRIKE (-180 to 180°).
+%	            to the fault STRIKE (-180 to 180Â°).
 %	   SLIP   : dislocation in RAKE direction (length unit)
 %	   OPEN   : dislocation in tensile component (same unit as SLIP)
 %
@@ -69,16 +69,16 @@ function varargout=okada85(varargin)
 %	   [uE,uN,uZ] = okada85(E,N,2,30,70,5,3,-45,1,1,'plot');
 %	   figure, surf(E,N,uN)
 %
-%	considers a 5x3 fault at depth 2, N30°-strike, 70°-dip, and unit dislocation
+%	considers a 5x3 fault at depth 2, N30Â°-strike, 70Â°-dip, and unit dislocation
 %	in all directions (reverse, senestral and open). Displacements are computed
 %	on a regular grid from -10 to 10, and North displacements are plotted as a
 %	surface.
 %
 %
-%	Author: François Beauducel <beauducel@ipgp.fr>
+%	Author: FranÃ§ois Beauducel <beauducel@ipgp.fr>
 %	   Institut de Physique du Globe de Paris
 %	Created: 1997
-%	Updated: 2014-05-24
+%	Updated: 2025-02-18
 %
 %	References:
 %	   Aki K., and P. G. Richards, Quantitative seismology, Freemann & Co,
@@ -89,6 +89,7 @@ function varargout=okada85(varargin)
 %	Acknowledgments: Dmitry Nicolsky, Qian Yao, Halldor Geirsson
 
 %	Development history:
+%      [2025-02-18]: fixes an issue with DEPTH parameter.
 %	   [2014-05-24]: fixes a bug for tilt calculation (K1) when DIP=90.
 %	      Detected by Halldor Geirsson.
 %	   [2012-11-08]: solves partially mathematical singularities in 
@@ -104,7 +105,7 @@ function varargout=okada85(varargin)
 %	   [2010-09-24]: bugs correction in the syntax of I1, K2 and uyy_tf
 %	      functions, affecting some components. Detected by Dmitry Nicolsky.
 %
-%	Copyright (c) 1997-2012, François Beauducel, covered by BSD License.
+%	Copyright (c) 1997-2025, FranÃ§ois Beauducel, covered by BSD License.
 %	All rights reserved.
 %
 %	Redistribution and use in source and binary forms, with or without 
@@ -191,7 +192,7 @@ U2 = sin(rake).*slip;
 
 % Converts fault coordinates (E,N,DEPTH) relative to centroid
 % into Okada's reference system (X,Y,D)
-d = depth + sin(dip).*W/2;	% d is fault's top edge
+d = depth + sin(dip).*W/2;	% d is fault's bottom edge
 ec = e + cos(strike).*cos(dip).*W/2;
 nc = n - sin(strike).*cos(dip).*W/2;
 x = cos(strike).*nc + sin(strike).*ec + L/2;
@@ -286,7 +287,7 @@ if plotflag
 	alpha = pi/2 - strike;
 	x_fault = L/2*cos(alpha)*[-1,1,1,-1] + sin(alpha)*cos(dip)*W/2*[-1,-1,1,1];
 	y_fault = L/2*sin(alpha)*[-1,1,1,-1] + cos(alpha)*cos(dip)*W/2*[1,1,-1,-1];
-	z_fault = -d + sin(dip)*W*[1,1,0,0];
+	z_fault = -d + sin(dip)*W*[1,1,1,1]/2;
 	ddx = U1*cos(alpha) - U2*sin(alpha)*cos(dip) + U3*sin(alpha)*sin(dip);
 	ddy = U1*sin(alpha) + U2*cos(alpha)*cos(dip) - U3*cos(alpha)*sin(dip);
 	ddz = U2*sin(dip) + U3*cos(dip);
