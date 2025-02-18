@@ -7,7 +7,8 @@ function okada_checklist
 %	      half-space, Bull. Seismol. Soc. Am., 75:4, 1135-1154, 1985.
 %
 % Author: Francois Beauducel <beauducel@ipgp.fr>
-% Date: 2011-03-07
+% Created: 2011-03-07
+% Updated: 2025-02-18
 
 
 fprintf('\n=========================================\n');
@@ -71,7 +72,7 @@ case 'tensile'
 	slip = 0;
 	u3 = 1;
 end
-[uE,uN,uZ,uZE,uZN,uNN,uNE,uEN,uEE] = okada85(x-L/2,y-cosd(dip)*W/2,d-sind(dip)*W/2,90,dip,L,W,rake,slip,u3);
+[uE,uN,uZ,uZE,uZN,uNN,uNE,uEN,uEE] = okada85(x-L/2,y-cosd(dip)*W/2,d+sind(dip)*W/2,90,dip,L,W,rake,slip,u3);
 
 fprintf('--- Mode %s\n',mode);
 for i = 1:length(comp)
