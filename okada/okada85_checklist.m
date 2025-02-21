@@ -71,7 +71,7 @@ case 'tensile'
 	slip = 0;
 	u3 = 1;
 end
-[uE,uN,uZ,uZE,uZN,uNN,uNE,uEN,uEE] = okada85(x-L/2,y-cosd(dip)*W/2,d-sind(dip)*W/2,90,dip,L,W,rake,slip,u3);
+[uE,uN,uZ,uZE,uZN,uNN,uNE,uEN,uEE] = okada85(x-L/2,y-cosd(dip)*W/2,d+sind(dip)*W/2,90,dip,L,W,rake,slip,u3);
 
 fprintf('--- Mode %s\n',mode);
 for i = 1:length(comp)
