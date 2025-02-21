@@ -287,7 +287,7 @@ if plotflag
 	alpha = pi/2 - strike;
 	x_fault = L/2*cos(alpha)*[-1,1,1,-1] + sin(alpha)*cos(dip)*W/2*[-1,-1,1,1];
 	y_fault = L/2*sin(alpha)*[-1,1,1,-1] + cos(alpha)*cos(dip)*W/2*[1,1,-1,-1];
-	z_fault = -d + sin(dip)*W*[1,1,1,1]/2;
+	z_fault = -d + sin(dip)*W*[1,1,0,0];
 	ddx = U1*cos(alpha) - U2*sin(alpha)*cos(dip) + U3*sin(alpha)*sin(dip);
 	ddy = U1*sin(alpha) + U2*cos(alpha)*cos(dip) - U3*cos(alpha)*sin(dip);
 	ddz = U2*sin(dip) + U3*cos(dip);
